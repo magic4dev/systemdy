@@ -15,8 +15,8 @@ Gem::Specification.new do |spec|
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
-  spec.metadata["changelog_uri"] = "#{spec.homepage}/CHANGELOG.md"
-  spec.metadata["code_of_conduct_uri"] = "#{spec.homepage}/CODE_OF_CONDUCT.md"
+  spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/master/CHANGELOG.md"
+  spec.metadata["code_of_conduct_uri"] = "#{spec.homepage}/blob/master/CODE_OF_CONDUCT.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
