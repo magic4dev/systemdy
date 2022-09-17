@@ -23,10 +23,10 @@ describe Systemd::Service do
                 # test object's action method 
                 expect(subject).to respond_to("#{action}")
 
+                # test system call from object's action method 
+                expect(subject).to receive(:`).with("sudo #{subject.command} #{action} #{subject.name}")
                 # object's action method 
-                action_method = subject.send(action)
-                # test returned value from object's action method 
-                expect(action_method).to eq "#{subject.command} #{action} #{subject.name}"
+                subject.send(action)
             end
         end
     end

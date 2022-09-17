@@ -6,11 +6,11 @@ module Systemd
         attr_reader :name, :command
 
         # we create a new object that accept 1 argument:
-        # - the name of the systemd service to control (postgresql, redis etc..)
+        # 1. the name of the systemd service to control (postgresql, redis etc..)
         # Example:
         # my_postgresql_service = Systemd::Service.new('postgresql')
         def initialize(name)
-            @name = name
+            @name    = name
             @command = 'systemctl'
         end
 
@@ -24,7 +24,7 @@ module Systemd
         # my_postgresql_service.reload
         LIST_OF_ACTIONS.each do |action|
             define_method action do 
-                "#{@command} #{action} #{@name}"
+                `sudo #{@command} #{action} #{@name}`
             end
         end
     end
