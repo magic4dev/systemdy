@@ -31,6 +31,7 @@ describe Systemd::Service do
         end
     end
 
+    # test method for return the current status of the provided service
     describe "#status" do 
         it "return the current status of the provided service" do 
             # test object's status method 
