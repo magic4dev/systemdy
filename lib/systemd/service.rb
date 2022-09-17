@@ -3,15 +3,22 @@ module Systemd
         # list of supported actions on a provided service
         LIST_OF_ACTIONS = %w( start restart stop enable disable reload )
 
-        attr_reader :name, :command
+        attr_reader :name, :command, :founded
 
         # we create a new object that accept 1 argument:
         # 1. the name of the systemd service to control (postgresql, redis etc..)
         # Example:
         # my_postgresql_service = Systemd::Service.new('postgresql')
+        # - for retrieve object's name
+        #   my_postgresql_service.name
+        # - for retrieve object's command
+        #   my_postgresql_service.command
+        # - for retrieve object's founded (if a service exist or not)
+        #   my_postgresql_service.founded
         def initialize(name)
             @name    = name
             @command = 'systemctl'
+            @founded = exist?()
         end
 
         # method for check if a provided service exist
@@ -40,7 +47,7 @@ module Systemd
         # Example:
         # my_postgresql_service.status
         def status 
-            `#{@command} status #{@name}`
+            `#{@command} status #{@name}` 
         end
     end
 end

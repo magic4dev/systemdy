@@ -13,6 +13,8 @@ describe Systemd::Service do
             expect(subject.name).to eq 'my-service'
             # test object's command attribute
             expect(subject.command).to eq 'systemctl'
+            # test object's founded attribute
+            expect(subject.founded).to eq false
         end
     end
 
