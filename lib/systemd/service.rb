@@ -14,6 +14,14 @@ module Systemd
             @command = 'systemctl'
         end
 
+        # method for check if a provided service exist
+        # Example:
+        # my_postgresql_service.exist?
+        def exist? 
+            service_existence = `#{@command} list-units --type=service --all | grep -w #{@name}`
+            service_existence.nil? || service_existence.empty? ? false : true
+        end
+
         # create dynamically methods based on LIST_OF_ACTIONS constant
         # after created a new object we can call the methods:
         # my_postgresql_service.start
