@@ -30,4 +30,16 @@ describe Systemd::Service do
             end
         end
     end
+
+    describe "#status" do 
+        it "return the current status of the provided service" do 
+            # test object's status method 
+            expect(subject).to respond_to("status")
+
+            # test system call from object's action method 
+            expect(subject).to receive(:`).with("#{subject.command} status #{subject.name}")
+            # object's action method 
+            subject.send("status")
+        end
+    end
 end

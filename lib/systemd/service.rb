@@ -27,5 +27,12 @@ module Systemd
                 `sudo #{@command} #{action} #{@name}`
             end
         end
+
+        # methods for return the current status of the provided service
+        # Example:
+        # my_postgresql_service.status
+        def status 
+            `#{@command} status #{@name}`
+        end
     end
 end
