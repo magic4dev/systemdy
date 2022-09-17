@@ -9,12 +9,6 @@ module Systemd
         # 1. the name of the systemd service to control (postgresql, redis etc..)
         # Example:
         # my_postgresql_service = Systemd::Service.new('postgresql')
-        # - for retrieve object's name
-        #   my_postgresql_service.name
-        # - for retrieve object's command
-        #   my_postgresql_service.command
-        # - for retrieve object's founded (if a service exist or not)
-        #   my_postgresql_service.founded
         def initialize(name)
             @name    = name
             @command = 'systemctl'
@@ -39,7 +33,7 @@ module Systemd
         # my_postgresql_service.reload
         LIST_OF_ACTIONS.each do |action|
             define_method action do 
-                `sudo #{@command} #{action} #{@name}`
+                @founded == true ? `sudo #{@command} #{action} #{@name}` : default_error_message()
             end
         end
 
@@ -47,7 +41,14 @@ module Systemd
         # Example:
         # my_postgresql_service.status
         def status 
-            `#{@command} status #{@name}` 
+            @founded == true ? `#{@command} status #{@name}` : default_error_message()
+        end
+
+        private 
+
+        # method for return the default_error_message when a service not exists
+        def default_error_message 
+            "#{@name}.service not found"
         end
     end
 end
