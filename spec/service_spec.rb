@@ -57,13 +57,16 @@ describe Systemd::Service do
             let(:default_error_message) { "#{service_name}.service not found" }
 
             it "return the default error message" do 
+                # test the status method
                 expect(subject.send("status")).to eq default_error_message
+                # test the action method
                 Systemd::Service::LIST_OF_ACTIONS.each do |action|
                     expect(subject.send(action)).to eq default_error_message
                 end
             end
 
             it "set founded instance variable to false" do 
+                # test the exist? method
                 expect(subject.send("exist?")).to eq false
             end
         end
