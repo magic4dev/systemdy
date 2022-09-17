@@ -56,7 +56,7 @@ describe Systemd::Service do
             # the default error message
             let(:default_error_message) { "#{service_name}.service not found" }
 
-            it "return the default action message" do 
+            it "return the default error message" do 
                 expect(subject.send("status")).to eq default_error_message
                 Systemd::Service::LIST_OF_ACTIONS.each do |action|
                     expect(subject.send(action)).to eq default_error_message
