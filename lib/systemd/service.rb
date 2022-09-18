@@ -1,7 +1,10 @@
 module Systemd
     class Service 
         # list of supported actions on a provided service
-        LIST_OF_ACTIONS = %w( start restart stop enable disable reload )
+        LIST_OF_ACTIONS   = %w( start restart stop enable disable reload )
+
+        # list of supported statuses on a provided service
+        LIST_OF_STATUSES  = %w( enabled active )
 
         attr_reader :name, :command, :founded
 
@@ -42,6 +45,16 @@ module Systemd
         # my_postgresql_service.status
         def status 
             @founded == true ? `#{@command} status #{@name}` : default_error_message()
+        end
+
+        # create dynamically methods based on LIST_OF_STATUSES constant
+        # after created a new object we can call the methods:
+        # my_postgresql_service.is_enabled?
+        # my_postgresql_service.is_active?
+        LIST_OF_STATUSES.each do |status|
+            define_method "is_#{status}?" do 
+                @founded == true ? `#{@command} is-#{status} #{@name}` : default_error_message()
+            end
         end
 
         private 

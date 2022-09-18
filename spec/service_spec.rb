@@ -9,6 +9,11 @@ describe Systemd::Service do
     it "has a list of supported actions" do
         expect(Systemd::Service::LIST_OF_ACTIONS).to eq %w( start restart stop enable disable reload )
     end
+    
+    # test LIST_OF_STATUSES constant
+    it "has a list of supported statuses" do
+        expect(Systemd::Service::LIST_OF_STATUSES).to eq %w( enabled active )
+    end
 
     # test name attribute
     it "has a name attribute" do
@@ -48,8 +53,8 @@ describe Systemd::Service do
             subject.send("exist?")
         end
 
-        # test when a provided service does not exists
-        context "when a provided service does not exists" do 
+        # test when a provided service does not exist
+        context "when a provided service does not exist" do 
             # the subject in this context is re-assigned for a dummy service
             subject { Systemd::Service.new('my-service') }
 
@@ -95,6 +100,20 @@ describe Systemd::Service do
             expect(subject).to receive(:`).with("#{service_command} status #{service_name}")
             # object's status method 
             subject.send("status")
+        end
+    end
+
+    # dynamically test methods based on LIST_OF_STATUSES constant
+    Systemd::Service::LIST_OF_STATUSES.each do |status|
+        describe "#is_#{status}?" do
+            it "check if the created service is #{status}" do
+                # test object's status method 
+                expect(subject).to respond_to("is_#{status}?")
+                # test system call from object's status method 
+                expect(subject).to receive(:`).with("#{service_command} is-#{status} #{service_name}")
+                # object's status method 
+                subject.send("is_#{status}?")
+            end
         end
     end
 end
