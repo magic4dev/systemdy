@@ -96,10 +96,10 @@ describe Systemd::Service do
         it "return the current status of the provided service" do 
             # test object's status method 
             expect(subject).to respond_to("status")
-            # test system call from object's status method 
-            expect(subject).to receive(:`).with("#{service_command} status #{service_name}")
-            # object's status method 
-            subject.send("status")
+            # test that returned value from object's status method is an array
+            expect(subject.send("status")).to be_an_instance_of(Array)
+            # test that returned value from object's status method is an array with 5 elements
+            expect(subject.send("status").size).to be 5
         end
     end
 

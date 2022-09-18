@@ -44,7 +44,7 @@ module Systemd
         # Example:
         # my_postgresql_service.status
         def status 
-            @founded == true ? `#{@command} status #{@name}` : default_error_message()
+            @founded == true ? `#{@command} status #{@name}`.split(/\n/).each(&:lstrip!)[1..5] : default_error_message()
         end
 
         # create dynamically methods based on LIST_OF_STATUSES constant
