@@ -7,7 +7,7 @@ describe Systemd::Service do
 
     # test LIST_OF_ACTIONS constant
     it "has a list of supported actions" do
-        expect(Systemd::Service::LIST_OF_ACTIONS).to eq %w( start restart stop enable disable reload )
+        expect(Systemd::Service::LIST_OF_ACTIONS).to eq %w( start restart stop enable disable reload mask unmask )
     end
     
     # test LIST_OF_STATUSES constant

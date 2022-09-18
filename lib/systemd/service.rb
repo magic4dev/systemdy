@@ -1,7 +1,7 @@
 module Systemd
     class Service 
         # list of supported actions on a provided service
-        LIST_OF_ACTIONS   = %w( start restart stop enable disable reload )
+        LIST_OF_ACTIONS   = %w( start restart stop enable disable reload mask unmask )
 
         # list of supported statuses on a provided service
         LIST_OF_STATUSES  = %w( enabled active )
