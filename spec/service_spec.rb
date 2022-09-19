@@ -27,7 +27,7 @@ describe Systemd::Service do
 
     # test founded attribute
     it "has a founded boolean attribute" do
-        expect(service_command)
+        expect(service_founded)
     end
 
     describe '#initialize' do
