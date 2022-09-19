@@ -51,9 +51,13 @@ module Systemd
         # after created a new object we can call the methods:
         # my_postgresql_service.is_enabled?
         # my_postgresql_service.is_active?
+        # if the provided service is active or enabled this method return
+        # - true
+        # otherwise return
+        # - false
         LIST_OF_STATUSES.each do |status|
             define_method "is_#{status}?" do 
-                @founded == true ? `#{@command} is-#{status} #{@name}` : default_error_message()
+                @founded == true ? `#{@command} is-#{status} #{@name}`.chomp == status : default_error_message()
             end
         end
 

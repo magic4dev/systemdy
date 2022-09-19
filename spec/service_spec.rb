@@ -109,10 +109,8 @@ describe Systemd::Service do
             it "check if the created service is #{status}" do
                 # test object's status method 
                 expect(subject).to respond_to("is_#{status}?")
-                # test system call from object's status method 
-                expect(subject).to receive(:`).with("#{service_command} is-#{status} #{service_name}")
                 # object's status method 
-                subject.send("is_#{status}?")
+                expect(subject.send("is_#{status}?")).to eq true
             end
         end
     end
