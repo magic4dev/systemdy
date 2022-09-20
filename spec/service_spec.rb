@@ -50,7 +50,7 @@ describe Systemd::Service do
             # test system call from object's exist? method 
             expect(subject).to receive(:`).with("#{service_command} list-units --type=service --all | grep -w #{service_name}")
             # object's exist method 
-            subject.send("exist?")
+            subject.exist?
         end
 
         # test when a provided service does not exist
@@ -61,18 +61,23 @@ describe Systemd::Service do
             # the default error message
             let(:default_error_message) { "#{service_name}.service not found" }
 
+            it "return false" do 
+                # test the exist? method
+                expect(subject.exist?).to eq false
+            end
+            
+            it "set founded instance variable to false" do 
+                # test the exist? method
+                expect(service_founded).to eq false
+            end
+
             it "return the default error message" do 
                 # test the status method
-                expect(subject.send("status")).to eq default_error_message
+                expect(subject.status).to eq default_error_message
                 # test the action method
                 Systemd::Service::LIST_OF_ACTIONS.each do |action|
                     expect(subject.send(action)).to eq default_error_message
                 end
-            end
-
-            it "set founded instance variable to false" do 
-                # test the exist? method
-                expect(subject.send("exist?")).to eq false
             end
         end
     end
@@ -97,9 +102,9 @@ describe Systemd::Service do
             # test object's status method 
             expect(subject).to respond_to("status")
             # test that returned value from object's status method is an array
-            expect(subject.send("status")).to be_an_instance_of(Array)
+            expect(subject.status).to be_an_instance_of(Array)
             # test that returned value from object's status method is an array with 5 elements
-            expect(subject.send("status").size).to be 5
+            expect(subject.status.size).to be 5
         end
     end
 
