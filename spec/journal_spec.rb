@@ -6,9 +6,9 @@ describe Systemd::Journal::Unit do
     let(:unit_founded)        { subject.founded }
 
     # log variables
-    let(:log_start_period)    { 'today'  }
+    let(:log_start_period)    { 'yesterday' }
     let(:log_end_period)      { '15:00' }
-    let(:log_number_of_lines) { 9 }
+    let(:log_number_of_lines) { 10 }
 
     # test name attribute
     it "has a unit attribute" do 
@@ -26,7 +26,7 @@ describe Systemd::Journal::Unit do
     end
 
     describe '#initialize' do
-        it 'create a new object for control the provided unit service' do
+        it 'create a new object for manage journactl utility for the provided unit' do
             # test object's name attribute
             expect(unit_name).to eq 'postgresql'
             # test object's command attribute
@@ -37,22 +37,32 @@ describe Systemd::Journal::Unit do
     end
 
     # test method for check if a provided unit exist
-    describe '#exists?' do
+    describe '#exist?' do
         it 'check if a provided unit exist' do
-            allow(subject).to receive("exists?").and_return(true)
+            expect(subject.exist?).to eq true
         end
 
         # test when a provided unit does not exist
         context "when a provided unit does not exist" do 
-            # the subject in this context is re-assigned for a dummy service
+            # the subject in this context is re-assigned for a dummy unit
             subject { Systemd::Journal::Unit.new('my-service') }
 
-            # the default error message
-            let(:default_error_message) { "-- No entries --" }
+            it "return false" do 
+                # test the exist? method
+                expect(subject.exist?).to eq false
+            end
 
             it "set founded instance variable to false" do 
                 # test the exist? method
                 expect(unit_founded).to eq false
+            end
+
+            # the default error message
+            let(:default_error_message) { "-- No entries --" }
+
+            it "return the default error message" do 
+                # test display_logs method
+                expect(subject.display_logs(since: log_start_period, to: log_end_period, lines: log_number_of_lines)).to eq default_error_message
             end
         end
     end
@@ -67,9 +77,40 @@ describe Systemd::Journal::Unit do
                 expect(third_argument).to be_an_instance_of(Integer)
             end
             # test that returned value from display_logs method is an array
-            expect(subject.display_logs(log_start_period, log_end_period, log_number_of_lines)).to be_an_instance_of(Array)
+            expect(subject.display_logs(since: log_start_period, to: log_end_period, lines: log_number_of_lines)).to be_an_instance_of(Array)
             # test that returned value from display_logs method is an array with a number of elements equal to number_of_lines argument
-            expect(subject.display_logs(log_start_period, log_end_period, log_number_of_lines).size).to eq log_number_of_lines
+            expect(subject.display_logs(since: log_start_period, to: log_end_period, lines: log_number_of_lines).size).to eq log_number_of_lines
+        end
+
+        # test when no arguments are provided
+        context "when no arguments are provided" do 
+            it "return the last 10 lines of logs for the provided unit" do 
+                # test that returned value from display_logs method is an array with a number of elements equal to 10 (the default lines of logs for the provided unit)
+                expect(subject.display_logs.size).to eq log_number_of_lines
+            end
+        end
+
+        # test when provided arguments are incorrect
+        context "when provided arguments are incorrect" do 
+            it "return the default error message" do 
+                # test display_logs method with default journalctl error
+                expect(subject.display_logs(since: 'an incorrect period', to: 'another incorrect period', lines: log_number_of_lines)).to match(/Failed to parse/)
+            end
+        end
+
+        # test when provided arguments are incorrect
+        context "when argument types are incorrect" do 
+
+            # the rescue nomethod error message
+            let(:method_error) { "Sorry but you have provided bad argument type!" }
+
+            it "return the bad arguments message" do 
+                # test display_logs method with default journalctl error
+                # allow(subject).to receive('display_logs').with(since: 1, lines: log_number_of_lines).once.and_raise
+                allow(subject).to receive('display_logs').with(since: 1, lines: log_number_of_lines).once.and_call_original
+                expect(subject.display_logs(since: 1, lines: log_number_of_lines)).to eq method_error
+                # .to raise_error(NoMethodError), "S bad argument type!"
+            end
         end
     end
 end
