@@ -105,11 +105,9 @@ describe Systemd::Journal::Unit do
             let(:method_error) { "Sorry but you have provided bad argument type!" }
 
             it "return the bad arguments message" do 
-                # test display_logs method with default journalctl error
-                # allow(subject).to receive('display_logs').with(since: 1, lines: log_number_of_lines).once.and_raise
+                # test display_logs method with bad_arguments_message error method
                 allow(subject).to receive('display_logs').with(since: 1, lines: log_number_of_lines).once.and_call_original
                 expect(subject.display_logs(since: 1, lines: log_number_of_lines)).to eq method_error
-                # .to raise_error(NoMethodError), "S bad argument type!"
             end
         end
     end
