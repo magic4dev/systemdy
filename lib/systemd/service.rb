@@ -14,16 +14,8 @@ module Systemd
         # my_postgresql_service = Systemd::Service.new('postgresql')
         def initialize(name)
             @name    = name
-            @command = 'systemctl'
-            @founded = exist?()
-        end
-
-        # method for check if a provided service exist
-        # Example:
-        # my_postgresql_service.exist?
-        def exist? 
-            service_existence = `#{@command} list-units --type=service --all | grep -w #{@name}`
-            service_existence.nil? || service_existence.empty? ? false : true
+            @command = SYSTEMCTL_COMMAND # constant contained in systemd.rb
+            @founded = Systemd.exist?(@name)
         end
 
         # create dynamically methods based on LIST_OF_ACTIONS constant
@@ -36,7 +28,7 @@ module Systemd
         # my_postgresql_service.reload
         LIST_OF_ACTIONS.each do |action|
             define_method action do 
-                @founded == true ? `sudo #{@command} #{action} #{@name}` : default_error_message()
+                @founded ? `sudo #{@command} #{action} #{@name}` : default_error_message()
             end
         end
 
@@ -44,7 +36,7 @@ module Systemd
         # Example:
         # my_postgresql_service.status
         def status 
-            @founded == true ? `#{@command} status #{@name}`.split(/\n/).each(&:lstrip!)[1..5] : default_error_message()
+            @founded ? `#{@command} status #{@name}`.split(/\n/).each(&:lstrip!)[1..5] : default_error_message()
         end
 
         # create dynamically methods based on LIST_OF_STATUSES constant
@@ -57,7 +49,7 @@ module Systemd
         # - false
         LIST_OF_STATUSES.each do |status|
             define_method "is_#{status}?" do 
-                @founded == true ? `#{@command} is-#{status} #{@name}`.chomp == status : default_error_message()
+                @founded ? `#{@command} is-#{status} #{@name}`.chomp == status : default_error_message()
             end
         end
 
@@ -65,7 +57,7 @@ module Systemd
 
         # method for return the default_error_message when a service not exists
         def default_error_message 
-            "#{@name}.service not found"
+            "Unit #{@name}.service could not be found."
         end
     end
 end

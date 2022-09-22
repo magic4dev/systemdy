@@ -41,47 +41,6 @@ describe Systemd::Service do
         end
     end
 
-    # test method for check if a provided service exist
-    describe "#exist?" do         
-        it "check if a provided service exist" do 
-            # test object's exist? method 
-            expect(subject).to respond_to("exist?")
-
-            # test system call from object's exist? method 
-            expect(subject).to receive(:`).with("#{service_command} list-units --type=service --all | grep -w #{service_name}")
-            # object's exist method 
-            subject.exist?
-        end
-
-        # test when a provided service does not exist
-        context "when a provided service does not exist" do 
-            # the subject in this context is re-assigned for a dummy service
-            subject { Systemd::Service.new('my-service') }
-
-            # the default error message
-            let(:default_error_message) { "#{service_name}.service not found" }
-
-            it "return false" do 
-                # test the exist? method
-                expect(subject.exist?).to eq false
-            end
-            
-            it "set founded instance variable to false" do 
-                # test the exist? method
-                expect(service_founded).to eq false
-            end
-
-            it "return the default error message" do 
-                # test the status method
-                expect(subject.status).to eq default_error_message
-                # test the action method
-                Systemd::Service::LIST_OF_ACTIONS.each do |action|
-                    expect(subject.send(action)).to eq default_error_message
-                end
-            end
-        end
-    end
-
     # dynamically test methods based on LIST_OF_ACTIONS constant
     Systemd::Service::LIST_OF_ACTIONS.each do |action|
         describe "##{action}" do
@@ -116,6 +75,30 @@ describe Systemd::Service do
                 expect(subject).to respond_to("is_#{status}?")
                 # object's status method 
                 expect(subject.send("is_#{status}?")).to eq true
+            end
+        end
+    end
+
+    # test when a provided service does not exist
+    context "when a provided service does not exist" do 
+        # the subject in this context is re-assigned for a dummy service
+        subject { Systemd::Service.new('my-service') }
+
+        # the default error message
+        let(:default_error_message) { "Unit #{service_name}.service could not be found." }
+
+        
+        it "set founded instance variable to false" do 
+            # test the exist? method
+            expect(service_founded).to eq false
+        end
+
+        it "return the default error message" do 
+            # test the status method
+            expect(subject.status).to eq default_error_message
+            # test the action method
+            Systemd::Service::LIST_OF_ACTIONS.each do |action|
+                expect(subject.send(action)).to eq default_error_message
             end
         end
     end

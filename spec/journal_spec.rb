@@ -1,12 +1,12 @@
 describe Systemd::Journal::Unit do 
 
     subject                   { Systemd::Journal::Unit.new('postgresql') }
-    let(:unit_name)           { subject.unit }
+    let(:unit_name)           { subject.name }
     let(:unit_command)        { subject.command }
     let(:unit_founded)        { subject.founded }
 
     # log variables
-    let(:log_start_period)    { 'yesterday' }
+    let(:log_start_period)    { '1 week ago' }
     let(:log_end_period)      { '15:00' }
     let(:log_number_of_lines) { 10 }
 
@@ -34,38 +34,7 @@ describe Systemd::Journal::Unit do
             # test object's founded attribute
             expect(unit_founded).to eq true
         end
-    end
-
-    # test method for check if a provided unit exist
-    describe '#exist?' do
-        it 'check if a provided unit exist' do
-            expect(subject.exist?).to eq true
-        end
-
-        # test when a provided unit does not exist
-        context "when a provided unit does not exist" do 
-            # the subject in this context is re-assigned for a dummy unit
-            subject { Systemd::Journal::Unit.new('my-service') }
-
-            it "return false" do 
-                # test the exist? method
-                expect(subject.exist?).to eq false
-            end
-
-            it "set founded instance variable to false" do 
-                # test the exist? method
-                expect(unit_founded).to eq false
-            end
-
-            # the default error message
-            let(:default_error_message) { "-- No entries --" }
-
-            it "return the default error message" do 
-                # test display_logs method
-                expect(subject.display_logs(since: log_start_period, to: log_end_period, lines: log_number_of_lines)).to eq default_error_message
-            end
-        end
-    end
+    end    
 
     # test method for display the logs of a provided unit
     describe '#display_logs' do
@@ -109,6 +78,25 @@ describe Systemd::Journal::Unit do
                 allow(subject).to receive('display_logs').with(since: 1, lines: log_number_of_lines).once.and_call_original
                 expect(subject.display_logs(since: 1, lines: log_number_of_lines)).to eq method_error
             end
+        end
+    end
+
+    # test when a provided unit does not exist
+    context "when a provided unit does not exist" do 
+        # the subject in this context is re-assigned for a dummy unit
+        subject { Systemd::Journal::Unit.new('my-service') }
+
+        it "set founded instance variable to false" do 
+            # test the exist? method
+            expect(unit_founded).to eq false
+        end
+
+        # the default error message
+        let(:default_error_message) { "-- No entries --" }
+
+        it "return the default error message" do 
+            # test display_logs method
+            expect(subject.display_logs(since: log_start_period, to: log_end_period, lines: log_number_of_lines)).to eq default_error_message
         end
     end
 end

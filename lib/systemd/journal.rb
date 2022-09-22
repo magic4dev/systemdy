@@ -2,16 +2,16 @@ module Systemd
     module Journal
         class Unit 
 
-            attr_reader :unit, :command, :founded
+            attr_reader :name, :command, :founded
 
             # we create a new object that accept 1 argument:
             # 1. the name of the unit to monitor (postgresql, redis etc..)
             # Example:
             # my_postgresql_log = Systemd::Journal::Unit.new('postgresql')
-            def initialize(unit)
-                @unit    = unit
-                @command = 'journalctl'
-                @founded = exist?()
+            def initialize(name)
+                @name    = name
+                @command = JOURNALCTL_COMMAND
+                @founded = Systemd.exist?(@name)
             end
 
             # method for check if a provided unit exist
@@ -21,9 +21,9 @@ module Systemd
             # - true
             # otherwise return
             # - false
-            def exist?
-                `#{@command} -u #{@unit}`.chomp != default_error_message()
-            end
+            # def exist?
+            #     `#{@command} -u #{@name}`.chomp != default_error_message()
+            # end
 
             # method for display logs for a provided unit
             # this method accept 3 keyword arguments:
@@ -38,10 +38,10 @@ module Systemd
             # my_postgresql_log.display_logs
             # - it return an array with 10 lines of logs
             # for display a log interval from yesterday to 15:00 with 30 lines (if the log size is almost 30 lines long)
-            # my_postgresql_log.display_logs(since:'yesterday', to: '15:00', lines: 30) or
+            # my_postgresql_log.display_logs(since: 'yesterday', to: '15:00', lines: 30) or
             # my_postgresql_log.display_logs(to: '15:00', lines: 30)                    
             # for display a log interval from last week to 15:00 with 30 lines (if the log size is almost 30 lines long)
-            # my_postgresql_log.display_logs(since:'1 week ago', to: '15:00', lines: 30)
+            # my_postgresql_log.display_logs(since: '1 week ago', to: '15:00', lines: 30)
             # if you call this method with bad arguments
             # my_postgresql_log.display_logs(since: 'an incorrect period', to: 'another incorrect period', lines: 23)
             # - it return "Sorry but you have provided bad argument type!" message
@@ -51,7 +51,7 @@ module Systemd
                 # it save the -U (--until) command of journalctl if the keyword argument 'to' is provided
                 to_argument    = "-U '#{to}' "    if !to.empty?    
                 # this is the complete journalctl command for rettrieve unit logs
-                journalctl     = `#{@command} -u #{@unit} #{since_argument} #{to_argument} -n #{lines} 2>&1`
+                journalctl     = `#{@command} -u #{@name} #{since_argument} #{to_argument} -n #{lines} 2>&1`
                 # if the provided arguments are incorrect return the default error message otherwise return the lines of log
                 unit_logs      = journalctl.match('Failed') ? journalctl.chomp : journalctl.split(/\n/)[0...lines] 
                 # if the provided unit exist display the logs otherwise return the default error message
@@ -76,4 +76,4 @@ module Systemd
             end
         end
     end 
-end
+end    

@@ -6,5 +6,16 @@ require_relative "systemd/journal"
 
 module Systemd
   class Error < StandardError; end
-  # Your code goes here...
+
+  # systemctl command
+  SYSTEMCTL_COMMAND  = 'systemctl'
+  # journalctl command
+  JOURNALCTL_COMMAND = 'journalctl'
+
+
+  # method for check if a provided service(or unit) exist
+  def self.exist?(service_name)
+    `#{SYSTEMCTL_COMMAND} status #{service_name} 2>&1`
+    $?.success? 
+  end
 end
