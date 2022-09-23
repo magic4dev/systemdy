@@ -2,7 +2,14 @@ module Systemd
     module Journal
         class Unit 
 
+            # extend Forwardable standard's library module for delegate a specified method to a designated object
+            # in this case we use 'extend' for add class methods.
+            extend Forwardable
+
             attr_reader :name, :command, :founded
+
+            # we delegate the existence of the created unit to Systemd's exist? class method contained in systemd.rb
+            delegate exist?:   :Systemd
 
             # we create a new object that accept 1 argument:
             # 1. the name of the unit to monitor (postgresql, redis etc..)
@@ -10,20 +17,9 @@ module Systemd
             # my_postgresql_log = Systemd::Journal::Unit.new('postgresql')
             def initialize(name)
                 @name    = name
-                @command = JOURNALCTL_COMMAND
-                @founded = Systemd.exist?(@name)
+                @command = JOURNALCTL_COMMAND # constant contained in systemd.rb
+                @founded = exist?(@name) # class method contained in systemd.rb
             end
-
-            # method for check if a provided unit exist
-            # Example:
-            # my_postgresql_log.exist?
-            # if the provided unit exist this method return
-            # - true
-            # otherwise return
-            # - false
-            # def exist?
-            #     `#{@command} -u #{@name}`.chomp != default_error_message()
-            # end
 
             # method for display logs for a provided unit
             # this method accept 3 keyword arguments:
@@ -55,7 +51,7 @@ module Systemd
                 # if the provided arguments are incorrect return the default error message otherwise return the lines of log
                 unit_logs      = journalctl.match('Failed') ? journalctl.chomp : journalctl.split(/\n/)[0...lines] 
                 # if the provided unit exist display the logs otherwise return the default error message
-                @founded       == true ? unit_logs : default_error_message()
+                @founded       ? unit_logs : default_error_message()
 
                 # manage exception when a bad argument is passed
                 rescue NoMethodError

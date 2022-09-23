@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# external gems or standard's library modules
+require "forwardable"
+
+# systemd's class and modules
 require_relative "systemd/version"
 require_relative "systemd/service"
 require_relative "systemd/journal"

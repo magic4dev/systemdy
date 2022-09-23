@@ -1,5 +1,10 @@
 module Systemd
     class Service 
+
+        # extend Forwardable standard's library module for delegate a specified method to a designated object
+        # in this case we use 'extend' for add class methods.
+        extend Forwardable
+
         # list of supported actions on a provided service
         LIST_OF_ACTIONS   = %w( start restart stop enable disable reload mask unmask )
 
@@ -8,6 +13,9 @@ module Systemd
 
         attr_reader :name, :command, :founded
 
+        # we delegate the existence of the created service to Systemd's exist? class method contained in systemd.rb
+        delegate exist?:   :Systemd
+
         # we create a new object that accept 1 argument:
         # 1. the name of the systemd service to control (postgresql, redis etc..)
         # Example:
@@ -15,7 +23,7 @@ module Systemd
         def initialize(name)
             @name    = name
             @command = SYSTEMCTL_COMMAND # constant contained in systemd.rb
-            @founded = Systemd.exist?(@name)
+            @founded = exist?(@name) # class method contained in systemd.rb
         end
 
         # create dynamically methods based on LIST_OF_ACTIONS constant
