@@ -26,6 +26,11 @@ module Systemd
         def_delegator :@validator, :service, :name
         # my_postgresql_service.exist?
         def_delegator :@validator, :check_if_a_service_exist, :exist?
+        
+        # delegate default_error_message to Systemd::Utility::Validator render_message method
+        def_delegator :@validator, :render_message, :default_error_message
+        # make default_error_message method as private
+        private :default_error_message
 
         # create dynamically methods based on LIST_OF_ACTIONS constant
         # after created a new object we can call the methods:
@@ -37,7 +42,7 @@ module Systemd
         # my_postgresql_service.reload
         LIST_OF_ACTIONS.each do |action|
             define_method action do 
-                exist? ? `sudo #{@command} #{action} #{name}` : default_error_message()
+                exist? ? `sudo #{@command} #{action} #{name}` : default_error_message("Unit #{name}.service could not be found.")
             end
         end
 
@@ -45,7 +50,7 @@ module Systemd
         # Example:
         # my_postgresql_service.status
         def status 
-            exist? ? `#{@command} status #{name}`.split(/\n/).each(&:lstrip!)[1..5] : default_error_message()
+            exist? ? `#{@command} status #{name}`.split(/\n/).each(&:lstrip!)[1..5] : default_error_message("Unit #{name}.service could not be found.")
         end
 
         # create dynamically methods based on LIST_OF_STATUSES constant
@@ -58,15 +63,8 @@ module Systemd
         # - false
         LIST_OF_STATUSES.each do |status|
             define_method "is_#{status}?" do 
-                exist? ? `#{@command} is-#{status} #{name}`.chomp == status : default_error_message()
+                exist? ? `#{@command} is-#{status} #{name}`.chomp == status : default_error_message("Unit #{name}.service could not be found.")
             end
-        end
-
-        private 
-
-        # method for return the default_error_message when a service not exists
-        def default_error_message 
-            "Unit #{name}.service could not be found."
         end
     end
 end

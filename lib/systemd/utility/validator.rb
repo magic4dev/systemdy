@@ -12,6 +12,11 @@ module Systemd
                 `#{SYSTEMCTL_COMMAND} status #{@service} 2>&1`
                 $?.success? 
             end
+
+            # method for render custom message if an error occurred
+            def render_message(message)
+                message
+            end
         end
     end
 end
