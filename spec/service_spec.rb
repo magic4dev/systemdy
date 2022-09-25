@@ -1,9 +1,10 @@
 describe Systemd::Service do 
 
-    subject               { Systemd::Service.new('postgresql') }
-    let(:service_name)    { subject.name }
-    let(:service_command) { subject.command }
-    let(:service_founded) { subject.founded }
+    # load shared variables for specs for avoid repetition
+    systemd_module_constant # TestVariables module's method contained in spec/setup/test_variables.rb
+    provided_services_as_argument_for_initialization # TestVariables module's method contained in spec/setup/test_variables.rb
+    initialized_services # TestVariables module's method contained in spec/setup/test_variables.rb
+    services_attributes # TestVariables module's method contained in spec/setup/test_variables.rb
 
     # test LIST_OF_ACTIONS constant
     it "has a list of supported actions" do
@@ -15,29 +16,37 @@ describe Systemd::Service do
         expect(Systemd::Service::LIST_OF_STATUSES).to eq %w( enabled active )
     end
 
+    # test validator attribute
+    it "has a validator attribute" do
+        expect(real_service_validator_attribute)
+    end
+
     # test name attribute
     it "has a name attribute" do
-        expect(service_name)
+        expect(real_service_name_attribute)
     end
 
     # test command attribute
     it "has a command attribute with default value 'systemctl'" do
-        expect(service_command)
-    end
-
-    # test founded attribute
-    it "has a founded boolean attribute" do
-        expect(service_founded)
+        expect(real_service_command_attribute)
     end
 
     describe '#initialize' do
-        it 'create a new object for control the provided service' do
+        it "create a new object for control the provided service" do
+            # test object's validator attribute
+            expect(real_service_validator_attribute).to be_an_instance_of(Systemd::Utility::Validator)
             # test object's name attribute
-            expect(service_name).to eq 'postgresql'
+            expect(real_service_name_attribute).to eq real_service_name
             # test object's command attribute
-            expect(service_command).to eq 'systemctl'
-            # test object's founded attribute
-            expect(service_founded).to eq true
+            expect(real_service_command_attribute).to eq systemclt_command_constant
+        end
+    end
+
+    # test method exist? for check if provided service exist
+    describe '#exist?' do
+        it "check if provided service exist" do
+            # test exist? method
+            expect(real_service).to respond_to("exist?")
         end
     end
 
@@ -46,11 +55,11 @@ describe Systemd::Service do
         describe "##{action}" do
             it "#{action} the created service" do
                 # test object's action method 
-                expect(subject).to respond_to("#{action}")
+                expect(real_service).to respond_to("#{action}")
                 # test system call from object's action method 
-                expect(subject).to receive(:`).with("sudo #{service_command} #{action} #{service_name}")
+                expect(real_service).to receive(:`).with("sudo #{real_service_command_attribute} #{action} #{real_service_name_attribute}")
                 # object's action method 
-                subject.send(action)
+                real_service.send(action)
             end
         end
     end
@@ -59,11 +68,11 @@ describe Systemd::Service do
     describe "#status" do 
         it "return the current status of the provided service" do 
             # test object's status method 
-            expect(subject).to respond_to("status")
+            expect(real_service).to respond_to("status")
             # test that returned value from object's status method is an array
-            expect(subject.status).to be_an_instance_of(Array)
+            expect(real_service.status).to be_an_instance_of(Array)
             # test that returned value from object's status method is an array with 5 elements
-            expect(subject.status.size).to be 5
+            expect(real_service.status.size).to be 5
         end
     end
 
@@ -72,33 +81,24 @@ describe Systemd::Service do
         describe "#is_#{status}?" do
             it "check if the created service is #{status}" do
                 # test object's status method 
-                expect(subject).to respond_to("is_#{status}?")
+                expect(real_service).to respond_to("is_#{status}?")
                 # object's status method 
-                expect(subject.send("is_#{status}?")).to eq true
+                expect(real_service.send("is_#{status}?")).to eq true
             end
         end
     end
 
     # test when a provided service does not exist
     context "when a provided service does not exist" do 
-        # the subject in this context is re-assigned for a dummy service
-        subject { Systemd::Service.new('my-service') }
-
         # the default error message
-        let(:default_error_message) { "Unit #{service_name}.service could not be found." }
-
-        
-        it "set founded instance variable to false" do 
-            # test the exist? method
-            expect(service_founded).to eq false
-        end
+        let(:default_error_message) { "Unit #{dummy_service.name}.service could not be found." }
 
         it "return the default error message" do 
             # test the status method
-            expect(subject.status).to eq default_error_message
+            expect(dummy_service.status).to eq default_error_message
             # test the action method
             Systemd::Service::LIST_OF_ACTIONS.each do |action|
-                expect(subject.send(action)).to eq default_error_message
+                expect(dummy_service.send(action)).to eq default_error_message
             end
         end
     end

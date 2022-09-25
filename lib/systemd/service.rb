@@ -2,7 +2,6 @@ module Systemd
     class Service 
 
         # extend Forwardable standard's library module for delegate a specified method to a designated object
-        # in this case we use 'extend' for add class methods.
         extend Forwardable
 
         # list of supported actions on a provided service
@@ -11,20 +10,22 @@ module Systemd
         # list of supported statuses on a provided service
         LIST_OF_STATUSES  = %w( enabled active )
 
-        attr_reader :name, :command, :founded
-
-        # we delegate the existence of the created service to Systemd's exist? class method contained in systemd.rb
-        delegate exist?:   :Systemd
+        attr_reader :command, :validator
 
         # we create a new object that accept 1 argument:
         # 1. the name of the systemd service to control (postgresql, redis etc..)
         # Example:
         # my_postgresql_service = Systemd::Service.new('postgresql')
         def initialize(name)
-            @name    = name
-            @command = SYSTEMCTL_COMMAND # constant contained in systemd.rb
-            @founded = exist?(@name) # class method contained in systemd.rb
+            @command   = SYSTEMCTL_COMMAND # constant contained in systemd.rb
+            @validator = Systemd::Utility::Validator.new(name) # class contained in systemd/utility/validator.rb
         end
+
+        # we delegate the followed methods to Systemd::Utility::Validator class contained in systemd/utility/validator.rb
+        # my_postgresql_service.name
+        def_delegator :@validator, :service, :name
+        # my_postgresql_service.exist?
+        def_delegator :@validator, :check_if_a_service_exist, :exist?
 
         # create dynamically methods based on LIST_OF_ACTIONS constant
         # after created a new object we can call the methods:
@@ -36,7 +37,7 @@ module Systemd
         # my_postgresql_service.reload
         LIST_OF_ACTIONS.each do |action|
             define_method action do 
-                @founded ? `sudo #{@command} #{action} #{@name}` : default_error_message()
+                exist? ? `sudo #{@command} #{action} #{name}` : default_error_message()
             end
         end
 
@@ -44,7 +45,7 @@ module Systemd
         # Example:
         # my_postgresql_service.status
         def status 
-            @founded ? `#{@command} status #{@name}`.split(/\n/).each(&:lstrip!)[1..5] : default_error_message()
+            exist? ? `#{@command} status #{name}`.split(/\n/).each(&:lstrip!)[1..5] : default_error_message()
         end
 
         # create dynamically methods based on LIST_OF_STATUSES constant
@@ -57,7 +58,7 @@ module Systemd
         # - false
         LIST_OF_STATUSES.each do |status|
             define_method "is_#{status}?" do 
-                @founded ? `#{@command} is-#{status} #{@name}`.chomp == status : default_error_message()
+                exist? ? `#{@command} is-#{status} #{name}`.chomp == status : default_error_message()
             end
         end
 
@@ -65,7 +66,7 @@ module Systemd
 
         # method for return the default_error_message when a service not exists
         def default_error_message 
-            "Unit #{@name}.service could not be found."
+            "Unit #{name}.service could not be found."
         end
     end
 end
