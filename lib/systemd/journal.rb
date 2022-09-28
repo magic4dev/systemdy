@@ -18,7 +18,7 @@ module Systemd
         # journalctl -b 3 return the third of the availables boot logs
         LIST_OF_OPTIONS_THAT_ACCEPT_AN_ARGUMENT   = { boot: '-b' }
 
-        # list of options for execute journalctl command that accept arguments
+        # list of options for execute journalctl command that require arguments
         # Example command: journalctl -u
         # the '-u' option require an argument (the name of the unit)
         # journalctl -u postgresql return the postgresql's logs
@@ -103,16 +103,13 @@ module Systemd
 
         # method for return formatted option
         # Example
-        # merge_option_with_argument_based_on_option_tipology(:unit, '-u', 'postgresql') return
-        # '-u postgresql'
-        # merge_option_with_argument_based_on_option_tipology(:group_id, '_GUID', 1234566) return
-        # '_GUID=1000'
+        # merge_option_with_argument_based_on_option_tipology(:unit, '-u', 'postgresql') return '-u postgresql'
+        # merge_option_with_argument_based_on_option_tipology(:group_id, '_GUID', 1234566) return '_GUID=1000'
         def self.merge_option_with_argument_based_on_option_tipology(message_from, option, argument)
             message_from == :unit ? "#{option} #{argument}" : "#{option}=#{argument}"
         end
 
         # make the methods below as private
         private_class_method :return_an_array_from_system_command, :render_message, :merge_option_with_argument_based_on_option_tipology
-
     end 
 end    
