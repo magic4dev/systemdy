@@ -23,12 +23,16 @@ module Systemd
 
         # we delegate render_message method to Systemd::Utility::MessageDisplayer class contained in systemd/utility/message_displayer.rb
         def_delegator Systemd::Utility::MessageDisplayer, :render_message 
-        # we delegate exist? method to Systemd::Utility::validator check_if_a_service_exist class method contained in systemd/utility/validator.rb
+        # we delegate check_if_a_service_exist method to Systemd::Utility::validator class contained in systemd/utility/validator.rb
         def_delegator Systemd::Utility::Validator, :check_if_a_service_exist 
 
         # method for check if a created service exist
         # Example:
         # my_postgresql_service.exist?
+        # if the provided service exist this method return
+        # - true
+        # otherwise return
+        # - false
         def exist? 
             check_if_a_service_exist(name) # class method contained in systemd/utility/validator.rb
         end
