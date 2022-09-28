@@ -26,7 +26,7 @@ module Systemd
         # journalctl: option requires an argument -- 'u' 
         LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT  = { unit: '-u', group_id: '_GID', user_id: '_UID' }
 
-        # we delegate return_an_array_from to Systemd::Utility::Formatter return_an_array_from_system_command class method contained in systemd/utility/formatter.rb
+        # we delegate return_an_array_from_system_command method to Systemd::Utility::Formatter class contained in systemd/utility/formatter.rb
         def_delegator Systemd::Utility::Formatter, :return_an_array_from_system_command
 
         LIST_OF_OPTIONS_THAT_NOT_ACCEPT_ARGUMENTS.each do |message_from, option|

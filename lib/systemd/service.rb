@@ -21,7 +21,7 @@ module Systemd
             @name      = name 
         end
 
-        # we delegate default_error_message method to Systemd::Utility::MessageDisplayer render_message class method contained in systemd/utility/message_displayer.rb
+        # we delegate render_message method to Systemd::Utility::MessageDisplayer class contained in systemd/utility/message_displayer.rb
         def_delegator Systemd::Utility::MessageDisplayer, :render_message 
         # we delegate exist? method to Systemd::Utility::validator check_if_a_service_exist class method contained in systemd/utility/validator.rb
         def_delegator Systemd::Utility::Validator, :check_if_a_service_exist 
