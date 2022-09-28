@@ -27,10 +27,8 @@ module Systemd
         # my_postgresql_service.exist?
         def_delegator :@validator, :check_if_a_service_exist, :exist?
         
-        # delegate default_error_message to Systemd::Utility::Validator render_message method
-        def_delegator :@validator, :render_message, :default_error_message
-        # make default_error_message method as private
-        private :default_error_message
+        # we delegate default_error_message to Systemd::Utility::MessageDisplayer render_message class method contained in systemd/utility/message_displayer.rb
+        delegate :render_message => Systemd::Utility::MessageDisplayer
 
         # create dynamically methods based on LIST_OF_ACTIONS constant
         # after created a new object we can call the methods:
@@ -42,7 +40,7 @@ module Systemd
         # my_postgresql_service.reload
         LIST_OF_ACTIONS.each do |action|
             define_method action do 
-                exist? ? `sudo #{@command} #{action} #{name}` : default_error_message("Unit #{name}.service could not be found.")
+                exist? ? `sudo #{command} #{action} #{name}` : default_error_message("Unit #{name}.service could not be found.")
             end
         end
 
@@ -50,7 +48,7 @@ module Systemd
         # Example:
         # my_postgresql_service.status
         def status 
-            exist? ? `#{@command} status #{name}`.split(/\n/).each(&:lstrip!)[1..5] : default_error_message("Unit #{name}.service could not be found.")
+            exist? ? `#{command} status #{name}`.split(/\n/).each(&:lstrip!)[1..5] : default_error_message("Unit #{name}.service could not be found.")
         end
 
         # create dynamically methods based on LIST_OF_STATUSES constant
@@ -63,8 +61,17 @@ module Systemd
         # - false
         LIST_OF_STATUSES.each do |status|
             define_method "is_#{status}?" do 
-                exist? ? `#{@command} is-#{status} #{name}`.chomp == status : default_error_message("Unit #{name}.service could not be found.")
+                exist? ? `#{command} is-#{status} #{name}`.chomp == status : default_error_message("Unit #{name}.service could not be found.")
             end
         end
+
+        # method for render a custom message if an error occurred
+        # we wrap Systemd::Utility::MessageDisplayer render_message class method into default_error_message instance method
+        def default_error_message(message)
+            render_message(message)
+        end
+
+        # make default_error_message method as private
+        private :default_error_message
     end
 end

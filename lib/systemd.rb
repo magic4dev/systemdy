@@ -6,6 +6,7 @@ require "forwardable"
 # systemd's class and modules
 require_relative "systemd/version"
 require_relative "systemd/utility/validator"
+require_relative "systemd/utility/message_displayer"
 require_relative "systemd/service"
 require_relative "systemd/journal"
 
