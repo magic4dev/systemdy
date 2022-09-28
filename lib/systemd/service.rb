@@ -21,10 +21,12 @@ module Systemd
             @name      = name 
         end
 
+        # we delegate return_an_array_from_system_command method to Systemd::Utility::Formatter class contained in systemd/utility/formatter.rb
+        def_delegator Systemd::Utility::Formatter,        :return_an_array_from_system_command
         # we delegate render_message method to Systemd::Utility::MessageDisplayer class contained in systemd/utility/message_displayer.rb
         def_delegator Systemd::Utility::MessageDisplayer, :render_message 
         # we delegate check_if_a_service_exist method to Systemd::Utility::validator class contained in systemd/utility/validator.rb
-        def_delegator Systemd::Utility::Validator, :check_if_a_service_exist 
+        def_delegator Systemd::Utility::Validator,        :check_if_a_service_exist 
 
         # method for check if a created service exist
         # Example:
@@ -68,7 +70,7 @@ module Systemd
         # - false
         LIST_OF_STATUSES.each do |status|
             define_method "is_#{status}?" do 
-                exist? ? `#{command} is-#{status} #{name}`.chomp == status : default_error_message()
+                exist? ? return_an_array_from_system_command(`#{command} is-#{status} #{name}`).include?(status) : default_error_message()
             end
         end
 
@@ -77,7 +79,7 @@ module Systemd
             render_message("Unit #{name}.service could not be found.") # class method contained in systemd/utility/message_displayer.rb
         end
 
-        # make render_message and default_error_message method as private
-        private :render_message, :default_error_message
+        # make the methods below as private
+        private :render_message, :default_error_message, :return_an_array_from_system_command
     end
 end
