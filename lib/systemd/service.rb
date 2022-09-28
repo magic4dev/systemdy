@@ -30,7 +30,7 @@ module Systemd
         # Example:
         # my_postgresql_service.exist?
         def exist? 
-            check_if_a_service_exist(name)
+            check_if_a_service_exist(name) # class method contained in systemd/utility/validator.rb
         end
         
         # create dynamically methods based on LIST_OF_ACTIONS constant
@@ -43,7 +43,7 @@ module Systemd
         # my_postgresql_service.reload
         LIST_OF_ACTIONS.each do |action|
             define_method action do 
-                exist? ? `sudo #{command} #{action} #{name}` : render_message("Unit #{name}.service could not be found.")
+                exist? ? `sudo #{command} #{action} #{name}` : default_error_message()
             end
         end
 
@@ -51,7 +51,7 @@ module Systemd
         # Example:
         # my_postgresql_service.status
         def status 
-            exist? ? `#{command} status #{name}`.split(/\n/).each(&:lstrip!)[1..5] : render_message("Unit #{name}.service could not be found.")
+            exist? ? `#{command} status #{name}`.split(/\n/).each(&:lstrip!)[1..5] : default_error_message()
         end
 
         # create dynamically methods based on LIST_OF_STATUSES constant
@@ -64,11 +64,16 @@ module Systemd
         # - false
         LIST_OF_STATUSES.each do |status|
             define_method "is_#{status}?" do 
-                exist? ? `#{command} is-#{status} #{name}`.chomp == status : render_message("Unit #{name}.service could not be found.")
+                exist? ? `#{command} is-#{status} #{name}`.chomp == status : default_error_message()
             end
         end
 
-        # make default_error_message method as private
-        private :render_message
+        # method for display error when a service or unit not exist
+        def default_error_message
+            render_message("Unit #{name}.service could not be found.") # class method contained in systemd/utility/message_displayer.rb
+        end
+
+        # make render_message and default_error_message method as private
+        private :render_message, :default_error_message
     end
 end
