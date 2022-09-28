@@ -29,4 +29,11 @@ module TestVariables
     let(:real_service_command_attribute)    { real_service.command }
     let(:real_service_validator_attribute)  { real_service.validator }
   end
+
+  # method for share log variables for Systemd::Journal class
+  def log_variables
+    let(:log_start_period)    { 'today' }
+    let(:log_end_period)      { Time.now.strftime('%H:%M') }
+    let(:log_number_of_lines) { 10 }
+  end
 end

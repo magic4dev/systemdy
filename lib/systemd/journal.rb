@@ -1,75 +1,61 @@
 module Systemd
-    module Journal
-        class Unit 
+    class Journal 
 
-            # extend Forwardable standard's library module for delegate a specified method to a designated object
-            # in this case we use 'extend' for add class methods.
-            extend Forwardable
+        # extend SingleForwardableForwardable standard's library module for delegate a specified method to a designated object
+        extend SingleForwardable
+        
+        # list of options for execute journalctl command that not accept arguments
+        # Example command: journalctl -k
+        # the '-k' option not accept arguments
+        # journalctl -k [argument] return
+        # Failed to add match [argument]: Invalid argument
+        LIST_OF_OPTIONS_THAT_NOT_ACCEPT_ARGUMENTS = { kernel: '-k' }
+        
+        # list of options for execute journalctl command that accept arguments
+        # Example command: journalctl -b
+        # the '-b' option accept an argument (the number of the boot)
+        # journalctl -b postgresql return the boots's logs
+        # journalctl -b 3 return the third of the availables boot logs
+        LIST_OF_OPTIONS_THAT_ACCEPT_AN_ARGUMENT   = { boot: '-b' }
 
-            attr_reader :name, :command, :founded
+        # list of options for execute journalctl command that accept arguments
+        # Example command: journalctl -u
+        # the '-u' option require an argument (the name of the unit)
+        # journalctl -u postgresql return the postgresql's logs
+        # journalctl -u without an argument return
+        # journalctl: option requires an argument -- 'u' 
+        LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT  = { unit: '-u', group_id: '_GID', user_id: '_UID' }
 
-            # we delegate the existence of the created unit to Systemd's exist? class method contained in systemd.rb
-            delegate exist?:   :Systemd
+        # we delegate return_an_array_from to Systemd::Utility::Formatter return_an_array_from_system_command class method contained in systemd/utility/formatter.rb
+        def_delegator Systemd::Utility::Formatter, :return_an_array_from_system_command
+        def_delegator Systemd::Utility::MessageDisplayer, :render_message 
 
-            # we create a new object that accept 1 argument:
-            # 1. the name of the unit to monitor (postgresql, redis etc..)
-            # Example:
-            # my_postgresql_log = Systemd::Journal::Unit.new('postgresql')
-            def initialize(name)
-                @name    = name
-                @command = JOURNALCTL_COMMAND # constant contained in systemd.rb
-                @founded = exist?(@name) # class method contained in systemd.rb
-            end
-
-            # method for display logs for a provided unit
-            # this method accept 3 keyword arguments:
-            # 1. since ('the log's initial period')  - String
-            # 2. to    ('the log's end period')      - String
-            # 3. lines ('the log's number of lines') - Integer - default 10 
-            # Example:
-            # if you call this method for a unit that doesn't exist
-            # my_unit_that_does_not_exist.display_logs
-            # - it call the the default_error_message method and return "-- No entries --" message
-            # if you call this method without arguments
-            # my_postgresql_log.display_logs
-            # - it return an array with 10 lines of logs
-            # for display a log interval from yesterday to 15:00 with 30 lines (if the log size is almost 30 lines long)
-            # my_postgresql_log.display_logs(since: 'yesterday', to: '15:00', lines: 30) or
-            # my_postgresql_log.display_logs(to: '15:00', lines: 30)                    
-            # for display a log interval from last week to 15:00 with 30 lines (if the log size is almost 30 lines long)
-            # my_postgresql_log.display_logs(since: '1 week ago', to: '15:00', lines: 30)
-            # if you call this method with bad arguments
-            # my_postgresql_log.display_logs(since: 'an incorrect period', to: 'another incorrect period', lines: 23)
-            # - it return "Sorry but you have provided bad argument type!" message
-            def display_logs(since: '', to: '', lines: 10)
-                # it save the -S (--since) command of journalctl if the keyword argument 'since' is provided
-                since_argument = "-S '#{since}' " if !since.empty? 
-                # it save the -U (--until) command of journalctl if the keyword argument 'to' is provided
-                to_argument    = "-U '#{to}' "    if !to.empty?    
-                # this is the complete journalctl command for rettrieve unit logs
-                journalctl     = `#{@command} -u #{@name} #{since_argument} #{to_argument} -n #{lines} 2>&1`
-                # if the provided arguments are incorrect return the default error message otherwise return the lines of log
-                unit_logs      = journalctl.match('Failed') ? journalctl.chomp : journalctl.split(/\n/)[0...lines] 
-                # if the provided unit exist display the logs otherwise return the default error message
-                @founded       ? unit_logs : default_error_message()
-
-                # manage exception when a bad argument is passed
-                rescue NoMethodError
-
-                bad_arguments_message()
-            end
-            
-            private 
-
-            # method for return the default_error_message when a unit not exists
-            def default_error_message
-                "-- No entries --"
-            end
-
-            # method for return the bad_arguments_message when bad arguments are provided
-            def bad_arguments_message
-                "Sorry but you have provided bad argument type!"
+        LIST_OF_OPTIONS_THAT_NOT_ACCEPT_ARGUMENTS.each do |message_from, option|
+            define_singleton_method "display_#{message_from}_logs" do |since: 'yesterday', to: Time.now.strftime('%H:%M'), lines: 10|
+                logs = `#{JOURNALCTL_COMMAND} #{option} -S '#{since}' -U '#{to}' -n #{lines}`
+                return_an_array_from(logs)
             end
         end
+        
+        LIST_OF_OPTIONS_THAT_ACCEPT_AN_ARGUMENT.each do |message_from, option|
+            define_singleton_method "display_#{message_from}_logs" do |argument: '', since: 'today', to: Time.now.strftime('%H:%M'), lines: 10|
+                logs = `#{JOURNALCTL_COMMAND} #{option} #{argument} -S '#{since}' -U '#{to}' -n #{lines}`
+                return_an_array_from(logs)
+            end
+        end
+        
+        LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT.each do |message_from, option|
+            define_singleton_method "display_#{message_from}_logs" do |argument: '', since: 'today', to: Time.now.strftime('%H:%M'), lines: 10|
+                # logs = `#{JOURNALCTL_COMMAND} #{option} #{argument} -S '#{since}' -U '#{to}' -n #{lines}`
+                # return_an_array_from(logs)
+            end
+        end
+
+        def self.return_an_array_from(log)
+            return_an_array_from_system_command(log)
+        end
+        
+        private_class_method :return_an_array_from
+
     end 
 end    
