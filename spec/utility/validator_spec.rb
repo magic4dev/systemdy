@@ -16,14 +16,6 @@ describe Systemd::Utility::Validator do
         end
     end  
     
-    # test method render a custom message if an error occurred
-    describe "#render_message" do
-        it "it render a custom message if an error occurred" do
-            # test render_message method for real service
-            expect(real_service_validator).to respond_to("render_message").with(1).arguments
-        end
-    end
-
     # test method for check if a service exist
     describe "#check_if_a_service_exist" do
         it "check if a provided service or unit exist" do
