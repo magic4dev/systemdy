@@ -1,36 +1,23 @@
 describe Systemd::Utility::Validator do
 
     # load shared variables for specs for avoid repetition
-    provided_services_as_argument_for_initialization # TestVariables module's method contained in spec/setup/test_variables.rb
-    initialized_validators # TestVariables module's method contained in spec/setup/test_variables.rb
+    services_names # TestVariables module's method contained in spec/setup/test_variables.rb
 
-    # test service attribute
-    it "has a service attribute" do 
-        expect(real_service_validator.service) 
-    end
-
-    describe '#initialize' do
-        it 'create a new validator for the provided service' do
-            # test object's service attribute
-            expect(real_service_validator.service).to eq real_service_name
-        end
-    end  
-    
-    # test method for check if a service exist
-    describe "#check_if_a_service_exist" do
+    # test method for check if a service or unit exist
+    describe ".check_if_a_service_exist" do
         it "check if a provided service or unit exist" do
             # test check_if_a_service_exist method for real service
-            expect(real_service_validator).to respond_to("check_if_a_service_exist")
+            expect(described_class).to respond_to("check_if_a_service_exist")
             # test a method with a real systemd service
-            expect(real_service_validator.check_if_a_service_exist).to eq true
+            expect(described_class.check_if_a_service_exist(real_service_name)).to eq true
         end
 
-        # test when a provided service not exist
-        context "when a provided service does not exist" do 
+        # test when a provided service or unit not exist
+        context "when a provided service or unit does not exist" do 
             # test check_if_a_service_exist method for dummy service
             it "return false" do 
                 # test a method with a dummy systemd service
-                expect(dummy_service_validator.check_if_a_service_exist).to eq false
+                expect(described_class.check_if_a_service_exist(dummy_service_name)).to eq false
             end
         end
     end

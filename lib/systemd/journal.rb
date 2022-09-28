@@ -3,7 +3,7 @@ module Systemd
 
         # extend SingleForwardableForwardable standard's library module for delegate a specified method to a designated object
         extend SingleForwardable
-        
+               
         # list of options for execute journalctl command that not accept arguments
         # Example command: journalctl -k
         # the '-k' option not accept arguments
@@ -28,34 +28,30 @@ module Systemd
 
         # we delegate return_an_array_from to Systemd::Utility::Formatter return_an_array_from_system_command class method contained in systemd/utility/formatter.rb
         def_delegator Systemd::Utility::Formatter, :return_an_array_from_system_command
-        def_delegator Systemd::Utility::MessageDisplayer, :render_message 
 
         LIST_OF_OPTIONS_THAT_NOT_ACCEPT_ARGUMENTS.each do |message_from, option|
             define_singleton_method "display_#{message_from}_logs" do |since: 'yesterday', to: Time.now.strftime('%H:%M'), lines: 10|
                 logs = `#{JOURNALCTL_COMMAND} #{option} -S '#{since}' -U '#{to}' -n #{lines}`
-                return_an_array_from(logs)
+                return_an_array_from_system_command(logs) # class method contained in systemd/utility/formatter.rb
             end
         end
         
         LIST_OF_OPTIONS_THAT_ACCEPT_AN_ARGUMENT.each do |message_from, option|
             define_singleton_method "display_#{message_from}_logs" do |argument: '', since: 'today', to: Time.now.strftime('%H:%M'), lines: 10|
                 logs = `#{JOURNALCTL_COMMAND} #{option} #{argument} -S '#{since}' -U '#{to}' -n #{lines}`
-                return_an_array_from(logs)
+                return_an_array_from_system_command(logs) # class method contained in systemd/utility/formatter.rb
             end
         end
         
         LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT.each do |message_from, option|
             define_singleton_method "display_#{message_from}_logs" do |argument: '', since: 'today', to: Time.now.strftime('%H:%M'), lines: 10|
                 # logs = `#{JOURNALCTL_COMMAND} #{option} #{argument} -S '#{since}' -U '#{to}' -n #{lines}`
-                # return_an_array_from(logs)
+                # return_an_array_from_system_command(logs) # class method contained in systemd/utility/formatter.rb
             end
         end
 
-        def self.return_an_array_from(log)
-            return_an_array_from_system_command(log)
-        end
-        
-        private_class_method :return_an_array_from
+        # make return_an_array_from method as private
+        private_class_method :return_an_array_from_system_command
 
     end 
 end    

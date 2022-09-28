@@ -2,7 +2,7 @@ describe Systemd::Service do
 
     # load shared variables for specs for avoid repetition
     systemd_module_constant # TestVariables module's method contained in spec/setup/test_variables.rb
-    provided_services_as_argument_for_initialization # TestVariables module's method contained in spec/setup/test_variables.rb
+    services_names # TestVariables module's method contained in spec/setup/test_variables.rb
     initialized_services # TestVariables module's method contained in spec/setup/test_variables.rb
     services_attributes # TestVariables module's method contained in spec/setup/test_variables.rb
 
@@ -14,11 +14,6 @@ describe Systemd::Service do
     # test LIST_OF_STATUSES constant
     it "has a list of supported statuses" do
         expect(Systemd::Service::LIST_OF_STATUSES).to eq %w( enabled active )
-    end
-
-    # test validator attribute
-    it "has a validator attribute" do
-        expect(real_service_validator_attribute)
     end
 
     # test name attribute
@@ -33,8 +28,6 @@ describe Systemd::Service do
 
     describe '#initialize' do
         it "create a new object for control the provided service" do
-            # test object's validator attribute
-            expect(real_service_validator_attribute).to be_an_instance_of(Systemd::Utility::Validator)
             # test object's name attribute
             expect(real_service_name_attribute).to eq real_service_name
             # test object's command attribute

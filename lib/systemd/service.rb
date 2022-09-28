@@ -10,7 +10,7 @@ module Systemd
         # list of supported statuses on a provided service
         LIST_OF_STATUSES  = %w( enabled active )
 
-        attr_reader :command, :validator
+        attr_reader :command, :name
 
         # we create a new object that accept 1 argument:
         # 1. the name of the systemd service to control (postgresql, redis etc..)
@@ -18,18 +18,21 @@ module Systemd
         # my_postgresql_service = Systemd::Service.new('postgresql')
         def initialize(name)
             @command   = SYSTEMCTL_COMMAND # constant contained in systemd.rb
-            @validator = Systemd::Utility::Validator.new(name) # class contained in systemd/utility/validator.rb
+            @name      = name 
         end
 
-        # we delegate the followed methods to Systemd::Utility::Validator class contained in systemd/utility/validator.rb
-        # my_postgresql_service.name
-        def_delegator :@validator, :service, :name
-        # my_postgresql_service.exist?
-        def_delegator :@validator, :check_if_a_service_exist, :exist?
-        
-        # we delegate default_error_message to Systemd::Utility::MessageDisplayer render_message class method contained in systemd/utility/message_displayer.rb
-        delegate :render_message => Systemd::Utility::MessageDisplayer
+        # we delegate default_error_message method to Systemd::Utility::MessageDisplayer render_message class method contained in systemd/utility/message_displayer.rb
+        def_delegator Systemd::Utility::MessageDisplayer, :render_message 
+        # we delegate exist? method to Systemd::Utility::validator check_if_a_service_exist class method contained in systemd/utility/validator.rb
+        def_delegator Systemd::Utility::Validator, :check_if_a_service_exist 
 
+        # method for check if a created service exist
+        # Example:
+        # my_postgresql_service.exist?
+        def exist? 
+            check_if_a_service_exist(name)
+        end
+        
         # create dynamically methods based on LIST_OF_ACTIONS constant
         # after created a new object we can call the methods:
         # my_postgresql_service.start
@@ -40,7 +43,7 @@ module Systemd
         # my_postgresql_service.reload
         LIST_OF_ACTIONS.each do |action|
             define_method action do 
-                exist? ? `sudo #{command} #{action} #{name}` : default_error_message("Unit #{name}.service could not be found.")
+                exist? ? `sudo #{command} #{action} #{name}` : render_message("Unit #{name}.service could not be found.")
             end
         end
 
@@ -48,7 +51,7 @@ module Systemd
         # Example:
         # my_postgresql_service.status
         def status 
-            exist? ? `#{command} status #{name}`.split(/\n/).each(&:lstrip!)[1..5] : default_error_message("Unit #{name}.service could not be found.")
+            exist? ? `#{command} status #{name}`.split(/\n/).each(&:lstrip!)[1..5] : render_message("Unit #{name}.service could not be found.")
         end
 
         # create dynamically methods based on LIST_OF_STATUSES constant
@@ -61,17 +64,11 @@ module Systemd
         # - false
         LIST_OF_STATUSES.each do |status|
             define_method "is_#{status}?" do 
-                exist? ? `#{command} is-#{status} #{name}`.chomp == status : default_error_message("Unit #{name}.service could not be found.")
+                exist? ? `#{command} is-#{status} #{name}`.chomp == status : render_message("Unit #{name}.service could not be found.")
             end
         end
 
-        # method for render a custom message if an error occurred
-        # we wrap Systemd::Utility::MessageDisplayer render_message class method into default_error_message instance method
-        def default_error_message(message)
-            render_message(message)
-        end
-
         # make default_error_message method as private
-        private :default_error_message
+        private :render_message
     end
 end
