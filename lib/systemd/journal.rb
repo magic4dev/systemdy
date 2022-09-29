@@ -93,7 +93,7 @@ module Systemd
                 return render_message("display_#{message_from}_logs require an argument!") if argument.to_s.empty?
                 # combination of option and argument based on typology
                 # '-u postgresql' or '_GUID=1000' or '_UID=1000'
-                option_with_argument = merge_option_with_argument_based_on_option_tipology(message_from, option, argument)
+                option_with_argument = merge_option_with_argument_based_on_option_typology(message_from, option, argument)
                 # logs from system call
                 logs                 = `#{JOURNALCTL_COMMAND} #{option_with_argument} -S '#{since}' -U '#{to}' | tail -n #{lines} 2>&1`
                 # logs from system call converted into array
@@ -103,13 +103,13 @@ module Systemd
 
         # method for return formatted option
         # Example
-        # merge_option_with_argument_based_on_option_tipology(:unit, '-u', 'postgresql') return '-u postgresql'
-        # merge_option_with_argument_based_on_option_tipology(:group_id, '_GUID', 1234566) return '_GUID=1000'
-        def self.merge_option_with_argument_based_on_option_tipology(message_from, option, argument)
+        # merge_option_with_argument_based_on_option_typology(:unit, '-u', 'postgresql') return '-u postgresql'
+        # merge_option_with_argument_based_on_option_typology(:group_id, '_GUID', 1234566) return '_GUID=1000'
+        def self.merge_option_with_argument_based_on_option_typology(message_from, option, argument)
             message_from == :unit ? "#{option} #{argument}" : "#{option}=#{argument}"
         end
 
         # make the methods below as private
-        private_class_method :return_an_array_from_system_command, :render_message, :merge_option_with_argument_based_on_option_tipology
+        private_class_method :return_an_array_from_system_command, :render_message, :merge_option_with_argument_based_on_option_typology
     end 
 end    
