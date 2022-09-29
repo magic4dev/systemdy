@@ -45,7 +45,7 @@ module Systemd
         LIST_OF_OPTIONS_THAT_NOT_ACCEPT_ARGUMENTS.each do |message_from, option|
             define_singleton_method "display_#{message_from}_logs" do |since: 'today', to: Time.now.strftime('%H:%M'), lines: 10|
                 # logs from system call
-                logs = `#{JOURNALCTL_COMMAND} #{option} -S '#{since}' -U '#{to}' -n #{lines} 2>&1`
+                logs = `#{JOURNALCTL_COMMAND} #{option} -S '#{since}' -U '#{to}' -n #{lines} | tail -n #{lines} 2>&1`
                 # logs from system call converted into array
                 return_an_array_from_system_command(logs) # class method contained in systemd/utility/formatter.rb
             end
@@ -66,7 +66,7 @@ module Systemd
         LIST_OF_OPTIONS_THAT_ACCEPT_AN_ARGUMENT.each do |message_from, option|
             define_singleton_method "display_#{message_from}_logs" do |argument: '', since: 'today', to: Time.now.strftime('%H:%M'), lines: 10|
                 # logs from system call
-                logs = `#{JOURNALCTL_COMMAND} #{option} #{argument} -S '#{since}' -U '#{to}' -n #{lines} 2>&1`
+                logs = `#{JOURNALCTL_COMMAND} #{option} #{argument} -S '#{since}' -U '#{to}' -n #{lines} | tail -n #{lines} 2>&1`
                 # logs from system call converted into array
                 return_an_array_from_system_command(logs) # class method contained in systemd/utility/formatter.rb
             end
@@ -95,7 +95,7 @@ module Systemd
                 # '-u postgresql' or '_GUID=1000' or '_UID=1000'
                 option_with_argument = merge_option_with_argument_based_on_option_tipology(message_from, option, argument)
                 # logs from system call
-                logs                 = `#{JOURNALCTL_COMMAND} #{option_with_argument} -S '#{since}' -U '#{to}' -n #{lines} 2>&1`
+                logs                 = `#{JOURNALCTL_COMMAND} #{option_with_argument} -S '#{since}' -U '#{to}' | tail -n #{lines} 2>&1`
                 # logs from system call converted into array
                 return_an_array_from_system_command(logs) # class method contained in systemd/utility/formatter.rb
             end
