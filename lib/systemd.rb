@@ -8,6 +8,7 @@ require_relative "systemd/version"
 require_relative "systemd/utility/validator"
 require_relative "systemd/utility/formatter"
 require_relative "systemd/utility/message_displayer"
+require_relative "systemd/utility/key_value_filter"
 require_relative "systemd/service"
 require_relative "systemd/journal"
 
