@@ -57,6 +57,16 @@ describe Systemd::Service do
         end
     end
 
+    # test method for return a key/value pair of the provided service's properties
+    describe "#properties" do 
+        it "return a key/value pair of the provided service's properties" do 
+            # test object's status method 
+            expect(real_service).to respond_to("properties")
+            # test that returned value from object's status method is an array
+            expect(real_service.properties).to be_an_instance_of(Hash)
+        end
+    end
+
     # test method for return the current status of the provided service
     describe "#status" do 
         it "return the current status of the provided service" do 

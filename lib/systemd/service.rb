@@ -53,6 +53,20 @@ module Systemd
             end
         end
 
+        # method for return a key/value pair of the provided service's properties
+        # Example:
+        # my_postgresql_service.properties
+        # return a key/value pair of the provided service's properties
+        # {"Type"=>"oneshot",
+        # "Restart"=>"no",
+        # "NotifyAccess"=>"none",
+        # ....
+        # }
+        def properties
+            array_of_properties = return_an_array_from_system_command(`#{command} show #{name}`)
+            array_of_properties.collect { |property| { property.split('=')[0] => property.split('=')[1] } }.reduce({}, :merge)
+        end
+
         # method for return the current status of the provided service
         # Example:
         # my_postgresql_service.status

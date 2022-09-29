@@ -2,7 +2,7 @@ describe Systemd::Utility::MessageDisplayer do
 
     # test method for render a custom message tho the user
     describe ".render_message" do
-        it "it render a custom message to the user" do
+        it "return a custom message to the user" do
             # test render_message method for real service
             expect(described_class).to respond_to("render_message").with(1).arguments
             # test render_message method with a dummy message
