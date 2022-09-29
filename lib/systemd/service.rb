@@ -5,10 +5,15 @@ module Systemd
         extend Forwardable
 
         # list of supported actions on a provided service
-        LIST_OF_ACTIONS   = %w( start restart stop enable disable reload mask unmask )
+        LIST_OF_ACTIONS           = %w( start restart stop enable disable reload mask unmask )
 
         # list of supported statuses on a provided service
-        LIST_OF_STATUSES  = %w( enabled active )
+        LIST_OF_STATUSES          = %w( enabled active )
+
+        # list of status properties on a provided service when status command is called
+        LIST_OF_STATUS_PROPERTIES = %w( Names Description ExecMainPID LoadState ActiveState FragmentPath 
+                                        ActiveEnterTimestamp InactiveEnterTimestamp ActiveExitTimestamp InactiveExitTimestamp 
+                                    )
 
         attr_reader :command, :name
 
@@ -25,8 +30,10 @@ module Systemd
         def_delegator Systemd::Utility::Formatter,        :return_an_array_from_system_command
         # we delegate render_message method to Systemd::Utility::MessageDisplayer class contained in systemd/utility/message_displayer.rb
         def_delegator Systemd::Utility::MessageDisplayer, :render_message 
-        # we delegate check_if_a_service_exist method to Systemd::Utility::validator class contained in systemd/utility/validator.rb
+        # we delegate check_if_a_service_exist method to Systemd::Utility::Validator class contained in systemd/utility/validator.rb
         def_delegator Systemd::Utility::Validator,        :check_if_a_service_exist 
+        # we delegate filter_by_keys method to Systemd::Utility::KeyValueFilter class contained in systemd/utility/key_value.rb
+        def_delegator Systemd::Utility::KeyValueFilter,   :filter_by_keys 
 
         # method for check if a created service exist
         # Example:
@@ -57,10 +64,10 @@ module Systemd
         # Example:
         # my_postgresql_service.properties
         # return a key/value pair of the provided service's properties
-        # {"Type"=>"oneshot",
-        # "Restart"=>"no",
-        # "NotifyAccess"=>"none",
-        # ....
+        # { "Type"=>"oneshot",
+        #   "Restart"=>"no",
+        #   "NotifyAccess"=>"none",
+        #   ....
         # }
         def properties
             array_of_properties = return_an_array_from_system_command(`#{command} show #{name}`)
@@ -70,8 +77,20 @@ module Systemd
         # method for return the current status of the provided service
         # Example:
         # my_postgresql_service.status
+        # return a key/value pair of the provided service's status
+        # { "Names"=>"postgresql.service",              
+        #   "Description"=>"PostgreSQL RDBMS",          
+        #   "ExecMainPID"=>"48615",
+        #   "LoadState"=>"loaded",
+        #   "ActiveState"=>"active",
+        #   "FragmentPath"=>"/lib/systemd/system/postgresql.service",
+        #   "ActiveEnterTimestamp"=>"Thu 2022-09-29 17:13:07 CEST",
+        #   "InactiveEnterTimestamp"=>"Thu 2022-09-29 17:12:44 CEST",
+        #   "ActiveExitTimestamp"=>"Thu 2022-09-29 17:12:44 CEST",
+        #   "InactiveExitTimestamp"=>"Thu 2022-09-29 17:13:07 CEST"
+        # } 
         def status 
-            exist? ? `#{command} status #{name}`.split(/\n/).each(&:lstrip!)[1..5] : default_error_message()
+            exist? ? filter_by_keys(properties, LIST_OF_STATUS_PROPERTIES) : default_error_message()
         end
 
         # create dynamically methods based on LIST_OF_STATUSES constant
@@ -94,6 +113,6 @@ module Systemd
         end
 
         # make the methods below as private
-        private :render_message, :default_error_message, :return_an_array_from_system_command
+        private :render_message, :default_error_message, :return_an_array_from_system_command, :filter_by_keys 
     end
 end

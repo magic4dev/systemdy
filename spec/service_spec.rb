@@ -16,6 +16,13 @@ describe Systemd::Service do
         expect(Systemd::Service::LIST_OF_STATUSES).to eq %w( enabled active )
     end
 
+    # test LIST_OF_STATUS_PROPERTIES constant 
+    it "has a list of status properties" do
+        expect(Systemd::Service::LIST_OF_STATUS_PROPERTIES).to eq %w( Names Description ExecMainPID LoadState 
+            ActiveState FragmentPath ActiveEnterTimestamp InactiveEnterTimestamp ActiveExitTimestamp InactiveExitTimestamp
+        )
+    end 
+
     # test name attribute
     it "has a name attribute" do
         expect(real_service_name_attribute)
@@ -72,10 +79,10 @@ describe Systemd::Service do
         it "return the current status of the provided service" do 
             # test object's status method 
             expect(real_service).to respond_to("status")
-            # test that returned value from object's status method is an array
-            expect(real_service.status).to be_an_instance_of(Array)
-            # test that returned value from object's status method is an array with 5 elements
-            expect(real_service.status.size).to be 5
+            # test that returned value from object's status method is an hash
+            expect(real_service.status).to be_an_instance_of(Hash)
+            # test that returned value is an hash with a number of elements equal to Systemd::Service::LIST_OF_STATUS_PROPERTIES elements 
+            expect(real_service.status.size).to eq Systemd::Service::LIST_OF_STATUS_PROPERTIES.size
         end
     end
 
