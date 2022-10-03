@@ -2,7 +2,6 @@
 
 <div align="center">
 
-![](https://img.shields.io/badge/maintainability-A-brightgreen?style=flat-square)
 ![GitHub repo size](https://img.shields.io/github/repo-size/magic4dev/systemd?label=size&style=flat-square)
 [![GitHub issues](https://img.shields.io/github/issues/magic4dev/systemd?style=flat-square)](https://github.com/magic4dev/systemd/issues)
 [![GitHub forks](https://img.shields.io/github/forks/magic4dev/systemd?style=flat-square)](https://github.com/magic4dev/systemd/network)
