@@ -2,11 +2,11 @@
 
 <div align="center">
 
-![GitHub repo size](https://img.shields.io/github/repo-size/magic4dev/systemd?label=size&style=flat-square)
-[![GitHub issues](https://img.shields.io/github/issues/magic4dev/systemd?style=flat-square)](https://github.com/magic4dev/systemd/issues)
-[![GitHub forks](https://img.shields.io/github/forks/magic4dev/systemd?style=flat-square)](https://github.com/magic4dev/systemd/network)
-[![GitHub license](https://img.shields.io/github/license/magic4dev/systemd?style=flat-square)](https://github.com/magic4dev/systemd/blob/master/LICENSE.txt)
-[![GitHub stars](https://img.shields.io/github/stars/magic4dev/systemd?style=flat-square)](https://github.com/magic4dev/systemd/stargazers)
+![GitHub repo size](https://img.shields.io/github/repo-size/magic4dev/systemdy?label=size&style=flat-square)
+[![GitHub issues](https://img.shields.io/github/issues/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/issues)
+[![GitHub forks](https://img.shields.io/github/forks/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/network)
+[![GitHub license](https://img.shields.io/github/license/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/blob/master/LICENSE.txt)
+[![GitHub stars](https://img.shields.io/github/stars/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/stargazers)
 
 </div>
 
@@ -19,7 +19,7 @@ If your goal is to develop software to quickly manage systemd services or journa
 
 - Lightweight
 - Expressive classes and methods
-- Manage Systemd's services lifecycle with minimal effort!
+- Manage systemd's services lifecycle with minimal effort!
 - Extract and manipulate Journalctl logs with a single action!
 
 ## Table of contents
@@ -27,7 +27,7 @@ If your goal is to develop software to quickly manage systemd services or journa
 * [Dependencies](#dependencies)
 * [Usage](#usage)
 * [Manage services](#manage-services)
-  * [Create a Systemd Service object for control a service](#create-a-systemd-service-object-for-control-a-service)
+  * [Create a Systemdy Service object for control a service](#create-a-systemdy-service-object-for-control-a-service)
   * [Check if the provided service exist](#check-if-the-provided-service-exist)
   * [Check if the provided service is enabled](#check-if-the-provided-service-is-enabled)
   * [Check if the provided service is active](#check-if-the-provided-service-is-active)
@@ -60,7 +60,7 @@ If your goal is to develop software to quickly manage systemd services or journa
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'systemd'
+gem 'systemdy'
 ```
 
 And then execute:
@@ -69,29 +69,29 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install systemd
+    $ gem install systemdy
 ## Dependencies
 
-The only dependecy you need is [systemd](http://www.freedesktop.org/wiki/Software/systemd/) installed on your system (specifically libsystemd or the older libsystemd-journal) in order to use the gem. Currently the gem support systemd 249 or higher.
+The only dependecy you need is [systemd](http://www.freedesktop.org/wiki/Software/systemdy/) installed on your system (specifically libsystemd or the older libsystemdy-journal) in order to use the gem. Currently the gem support systemd 249 or higher.
 ## Usage
 
 After installing the gem, the first step is to require it:
 
 ```ruby
-require 'systemd'
+require 'systemdy'
 ```
 ## Manage services
 
 The first goal of this gem is to manage a systemd's service with minimal effort.
 
-This section provides an overview of the Systemd::Service class for managing the life cycle of a systemd's service.
+This section provides an overview of the Systemdy::Service class for managing the life cycle of a systemdy's service.
 
-### Create a Systemd Service object for control a service
+### Create a Systemdy Service object for control a service
 
-The first step is to create a new instance of the Systemd::Service class for control the desired service
+The first step is to create a new instance of the systemdy::Service class for control the desired service
 
 ```ruby
-my_postgresql_service = Systemd::Service.new('postgresql')
+my_postgresql_service = Systemdy::Service.new('postgresql')
 ```
 
 ### Check if the provided service exist
@@ -102,10 +102,10 @@ Once our object has been instantiated, you can check if the service is installed
 my_postgresql_service.exist?
 ```
 
-For check if a service is installed on your system without create a new instance of the Systemd::Service class
+For check if a service is installed on your system without create a new instance of the Systemdy::Service class
 
 ```ruby
-Systemd::Utility::Validator.check_if_a_service_exist('postgresql')
+Systemdy::Utility::Validator.check_if_a_service_exist('postgresql')
 ```
 if the provided service is installed on your system this methods return _**true**_, otherwise return _**false**_.
 
@@ -268,7 +268,7 @@ Exit from root session and you are ready to go! :sunglasses:
 
 The second goal of this gem is to provide a set of useful methods for retrieving journalctl log data.
 
-This section provides a brief overview of the Systemd::Journal class for managing journalctl log information.
+This section provides a brief overview of the Systemdy::Journal class for managing journalctl log information.
 
 ### Display kernel logs
 
@@ -277,7 +277,7 @@ Sometimes we need to check if the kernel is working properly or if something wen
 For getting the kernel logs 
 
 ```ruby
-Systemd::Journal.display_kernel_logs
+Systemdy::Journal.display_kernel_logs
 ```
 This class method executed with no arguments return an array with: 
 * a default size of 10 (the last 10 lines of log)
@@ -297,19 +297,19 @@ For example:
 If you want to analyze the last 50 log lines ranging from a month ago to 10:00 of the current day:
 
 ```ruby
-Systemd::Journal.display_kernel_logs(since: '1 month ago', to: '10:00', lines: 50)
+Systemdy::Journal.display_kernel_logs(since: '1 month ago', to: '10:00', lines: 50)
 ```
 
 If you want to analyze the last 20 log lines ranging from a week ago to yesterday:
 
 ```ruby
-Systemd::Journal.display_kernel_logs(since: '1 week ago', to: 'yesterday', lines: 20)
+Systemdy::Journal.display_kernel_logs(since: '1 week ago', to: 'yesterday', lines: 20)
 ```
 
 You can also filter the logs by specific dates in the format YYYY-MM-DD for example:
 
 ```ruby
-Systemd::Journal.display_kernel_logs(since: '2022-08-27', lines: 200)
+Systemdy::Journal.display_kernel_logs(since: '2022-08-27', lines: 200)
 ```
 
 If the passed arguments not match anything the method return an array with a message like this:
@@ -325,7 +325,7 @@ Sometimes we need to know if our system is working properly at boot time and if 
 For getting the boot logs 
 
 ```ruby
-Systemd::Journal.display_boot_logs
+Systemdy::Journal.display_boot_logs
 ```
 This class method executed with no arguments return an array with: 
 * a default size of 10 (the last 10 lines of log)
@@ -347,19 +347,19 @@ For example:
 If you want to analyze the last 50 log lines of the second boot ranging from a month ago to 10:00 of the current day:
 
 ```ruby
-Systemd::Journal.display_boot_logs(argument: 2, since: '1 month ago', to: '10:00', lines: 50)
+Systemdy::Journal.display_boot_logs(argument: 2, since: '1 month ago', to: '10:00', lines: 50)
 ```
 
 If you want to analyze the last 20 log of the third boot lines ranging from a week ago to yesterday:
 
 ```ruby
-Systemd::Journal.display_boot_logs(argument: 3, since: '1 week ago', to: 'yesterday', lines: 20)
+Systemdy::Journal.display_boot_logs(argument: 3, since: '1 week ago', to: 'yesterday', lines: 20)
 ```
 
 You can also filter the logs by specific dates in the format YYYY-MM-DD for example:
 
 ```ruby
-Systemd::Journal.display_boot_logs(since: '2022-08-27', lines: 200)
+Systemdy::Journal.display_boot_logs(since: '2022-08-27', lines: 200)
 ```
 If the passed arguments not match anything the method return an array with a message like this:
 
@@ -374,7 +374,7 @@ Another common task is to filter logs based on the unit that we need information
 To do this, we just simply need to pass the name of the unit as argument, for example we need to analyze postgresql unit logs:
 
 ```ruby
-Systemd::Journal.display_unit_logs(argument: 'postgresql')
+Systemdy::Journal.display_unit_logs(argument: 'postgresql')
 ```
 
 In this case the class method return an array with: 
@@ -403,19 +403,19 @@ For example:
 If you want to analyze the last 50 log lines of the potsgresql service ranging from a month ago to 10:00 of the current day:
 
 ```ruby
-Systemd::Journal.display_unit_logs(argument: 'postgresql', since: '1 month ago', to: '10:00', lines: 50)
+Systemdy::Journal.display_unit_logs(argument: 'postgresql', since: '1 month ago', to: '10:00', lines: 50)
 ```
 
 If you want to analyze the last 20 log lines of the potsgresql service ranging from a week ago to yesterday:
 
 ```ruby
-Systemd::Journal.display_unit_logs(argument: 'postgresql', since: '1 week ago', to: 'yesterday', lines: 20)
+Systemdy::Journal.display_unit_logs(argument: 'postgresql', since: '1 week ago', to: 'yesterday', lines: 20)
 ```
 
 You can also filter the logs by specific dates in the format YYYY-MM-DD for example:
 
 ```ruby
-Systemd::Journal.display_unit_logs(argument: 'postgresql', since: '2022-08-27', lines: 200)
+Systemdy::Journal.display_unit_logs(argument: 'postgresql', since: '2022-08-27', lines: 200)
 ```
 
 If the passed arguments not match anything the method return an array with a message like this:
@@ -429,7 +429,7 @@ If the passed arguments not match anything the method return an array with a mes
 To find all messages related to a particular group, we just simply need to pass the GUID of the group as argument, for example:
 
 ```ruby
-Systemd::Journal.display_group_id_logs(argument: 1000)
+Systemdy::Journal.display_group_id_logs(argument: 1000)
 ```
 
 In this case the class method return an array with: 
@@ -458,19 +458,19 @@ For example:
 If you want to analyze the last 50 log lines of the GUID 1000 ranging from a month ago to 10:00 of the current day:
 
 ```ruby
-Systemd::Journal.display_group_id_logs(argument: 1000, since: '1 month ago', to: '10:00', lines: 50)
+Systemdy::Journal.display_group_id_logs(argument: 1000, since: '1 month ago', to: '10:00', lines: 50)
 ```
 
 If you want to analyze the last 20 log lines of the GUID 1000 ranging from a week ago to yesterday:
 
 ```ruby
-Systemd::Journal.display_group_id_logs(argument: 1000, since: '1 week ago', to: 'yesterday', lines: 20)
+Systemdy::Journal.display_group_id_logs(argument: 1000, since: '1 week ago', to: 'yesterday', lines: 20)
 ```
 
 You can also filter the logs by specific dates in the format YYYY-MM-DD for example:
 
 ```ruby
-Systemd::Journal.display_group_id_logs(argument: 1000, since: '2022-08-27', lines: 200)
+Systemdy::Journal.display_group_id_logs(argument: 1000, since: '2022-08-27', lines: 200)
 ```
 
 If the passed arguments not match anything the method return an array with a message like this:
@@ -484,7 +484,7 @@ If the passed arguments not match anything the method return an array with a mes
 To find all messages related to a particular user, we just simply need to pass the UID of the user as argument, for example:
 
 ```ruby
-Systemd::Journal.display_user_id_logs(argument: 1000)
+Systemdy::Journal.display_user_id_logs(argument: 1000)
 ```
 
 In this case the class method return an array with: 
@@ -513,19 +513,19 @@ For example:
 If you want to analyze the last 50 log lines of the UID 1000 ranging from a month ago to 10:00 of the current day:
 
 ```ruby
-Systemd::Journal.display_user_id_logs(argument: 1000, since: '1 month ago', to: '10:00', lines: 50)
+Systemdy::Journal.display_user_id_logs(argument: 1000, since: '1 month ago', to: '10:00', lines: 50)
 ```
 
 If you want to analyze the last 20 log lines of the UID 1000 ranging from a week ago to yesterday:
 
 ```ruby
-Systemd::Journal.display_user_id_logs(argument: 1000, since: '1 week ago', to: 'yesterday', lines: 20)
+Systemdy::Journal.display_user_id_logs(argument: 1000, since: '1 week ago', to: 'yesterday', lines: 20)
 ```
 
 You can also filter the logs by specific dates in the format YYYY-MM-DD for example:
 
 ```ruby
-Systemd::Journal.display_user_id_logs(argument: 1000, since: '2022-08-27', lines: 200)
+Systemdy::Journal.display_user_id_logs(argument: 1000, since: '2022-08-27', lines: 200)
 ```
 
 If the passed arguments not match anything the method return an array with a message like this:
@@ -537,7 +537,7 @@ If the passed arguments not match anything the method return an array with a mes
 
 We :heart: pull requests from everyone. 
 
-Everyone interacting in the Systemd project's codebases is expected to follow the [code of conduct](https://github.com/magic4dev/systemd/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the systemdy project's codebases is expected to follow the [code of conduct](https://github.com/magic4dev/systemdy/blob/master/CODE_OF_CONDUCT.md).
 
 ### Develop a new feature
 
@@ -547,7 +547,7 @@ If you wanna develop a new feature:
 
 * Clone the repo with the following command:
 
-      git clone git@github.com:your-username/systemd.git
+      git clone git@github.com:your-username/systemdy.git
 
 * Install dependencies with:
 
@@ -565,7 +565,7 @@ If you wanna develop a new feature:
 
 * Write a good commit message
 * Push to your fork
-* [Submit a pull request](https://github.com/magic4dev/systemd/compare)
+* [Submit a pull request](https://github.com/magic4dev/systemdy/compare)
 * Wait for us, we will reply as soon as possible
 * We may suggest changes for better code quality
 * Please, if you push more than mone commit let's keep the history clean :stuck_out_tongue_winking_eye:
@@ -580,7 +580,7 @@ If you wanna fix a bug:
 
 * Clone the repo with the following command:
 
-      git clone git@github.com:your-username/systemd.git
+      git clone git@github.com:your-username/systemdy.git
 
 * Install dependencies with:
 
@@ -598,7 +598,7 @@ If you wanna fix a bug:
 
 * Write a good commit message
 * Push to your fork
-* [Submit a pull request](https://github.com/magic4dev/systemd/compare)
+* [Submit a pull request](https://github.com/magic4dev/systemdy/compare)
 * Wait for us, we will reply as soon as possible
 * We may suggest changes for better code quality
 * Please, if you push more than mone commit let's keep the history clean :stuck_out_tongue_winking_eye:
@@ -630,7 +630,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Useful links and resources
 
  - An interesting article on [how to run sudo commands without password](https://www.linuxshelltips.com/run-sudo-commands-without-password/)
- - The official Systemd documentation for [time specification](https://www.freedesktop.org/software/systemd/man/systemd.time.html)
+ - The official systemdy documentation for [time specification](https://www.freedesktop.org/software/systemd/man/systemd.time.html)
  
 ## Acknowledgements
 

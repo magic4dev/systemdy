@@ -1,4 +1,4 @@
-describe Systemd::Utility::Formatter do
+describe Systemdy::Utility::Formatter do
 
     # a sample linux command
     let(:sample_command) { `ls -la` }

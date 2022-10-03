@@ -1,4 +1,4 @@
-describe Systemd::Utility::MessageDisplayer do
+describe Systemdy::Utility::MessageDisplayer do
 
     # test method for render a custom message tho the user
     describe ".render_message" do

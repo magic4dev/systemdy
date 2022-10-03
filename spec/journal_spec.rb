@@ -1,4 +1,4 @@
-describe Systemd::Journal do 
+describe Systemdy::Journal do 
     
     # load shared variables for specs for avoid repetition
     log_variables # TestVariables module's method contained in spec/setup/test_variables.rb
@@ -6,21 +6,21 @@ describe Systemd::Journal do
 
     # test LIST_OF_OPTIONS_THAT_NOT_ACCEPT_ARGUMENTS constant
     it "has a list of options that not accept arguments" do
-        expect(Systemd::Journal::LIST_OF_OPTIONS_THAT_NOT_ACCEPT_ARGUMENTS).to include({ kernel: '-k' })
+        expect(Systemdy::Journal::LIST_OF_OPTIONS_THAT_NOT_ACCEPT_ARGUMENTS).to include({ kernel: '-k' })
     end
 
     # test LIST_OF_OPTIONS_THAT_ACCEPT_AN_ARGUMENT constant
     it "has a list of options that accept an argument" do
-        expect(Systemd::Journal::LIST_OF_OPTIONS_THAT_ACCEPT_AN_ARGUMENT).to include({ boot: '-b' })
+        expect(Systemdy::Journal::LIST_OF_OPTIONS_THAT_ACCEPT_AN_ARGUMENT).to include({ boot: '-b' })
     end
 
     # test LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT constant
     it "has a list of options that require an argument" do
-        expect(Systemd::Journal::LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT).to include({ unit: '-u', group_id: '_GID', user_id: '_UID' })
+        expect(Systemdy::Journal::LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT).to include({ unit: '-u', group_id: '_GID', user_id: '_UID' })
     end
     
     # dynamically test methods based on LIST_OF_OPTIONS_THAT_NOT_ACCEPT_ARGUMENTS constant
-    Systemd::Journal::LIST_OF_OPTIONS_THAT_NOT_ACCEPT_ARGUMENTS.each do |message_from, option|
+    Systemdy::Journal::LIST_OF_OPTIONS_THAT_NOT_ACCEPT_ARGUMENTS.each do |message_from, option|
         describe ".display_#{message_from}_logs" do
             it "display logs for #{message_from}" do
                 # test class method 
@@ -34,7 +34,7 @@ describe Systemd::Journal do
     end
 
     # dynamically test methods based on LIST_OF_OPTIONS_THAT_ACCEPT_AN_ARGUMENT constant
-    Systemd::Journal::LIST_OF_OPTIONS_THAT_ACCEPT_AN_ARGUMENT.each do |message_from, option|
+    Systemdy::Journal::LIST_OF_OPTIONS_THAT_ACCEPT_AN_ARGUMENT.each do |message_from, option|
         describe ".display_#{message_from}_logs" do
             it "display logs for #{message_from}" do
                 # test class method 
@@ -48,7 +48,7 @@ describe Systemd::Journal do
     end
 
     # dynamically test methods based on LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT constant
-    Systemd::Journal::LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT.each do |message_from, option|
+    Systemdy::Journal::LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT.each do |message_from, option|
         describe ".display_#{message_from}_logs" do
             it "display logs for #{message_from}" do
                 # test class method 
@@ -68,7 +68,7 @@ describe Systemd::Journal do
     # test when a required argument is not passed to a method that require an argument
     context "when a required argument is not passed to a method that require an argument" do 
         it "return the default error message" do 
-            Systemd::Journal::LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT.each do |message_from, option|
+            Systemdy::Journal::LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT.each do |message_from, option|
                 # call dynamically the method
                 executed_method = described_class.send("display_#{message_from}_logs")
                 # test display method if argument is not provided
@@ -80,7 +80,7 @@ describe Systemd::Journal do
     # test when a bad argument is passed to a method that accept or require an argument
     context "when a bad argument is passed to a method that accept or require an argument" do 
         it "return the default error message" do 
-            Systemd::Journal::LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT.each do |message_from, option|
+            Systemdy::Journal::LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT.each do |message_from, option|
                 case message_from
                 when :unit
                     # test for unit

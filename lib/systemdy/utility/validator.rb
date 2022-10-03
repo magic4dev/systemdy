@@ -1,4 +1,4 @@
-module Systemd
+module Systemdy
     module Utility 
         class Validator
             # method for check if a service exist

@@ -1,4 +1,4 @@
-describe Systemd::Service do 
+describe Systemdy::Service do 
 
     # load shared variables for specs for avoid repetition
     systemd_module_constant # TestVariables module's method contained in spec/setup/test_variables.rb
@@ -8,17 +8,17 @@ describe Systemd::Service do
 
     # test LIST_OF_ACTIONS constant
     it "has a list of supported actions" do
-        expect(Systemd::Service::LIST_OF_ACTIONS).to eq %w( start restart stop enable disable reload mask unmask )
+        expect(Systemdy::Service::LIST_OF_ACTIONS).to eq %w( start restart stop enable disable reload mask unmask )
     end
     
     # test LIST_OF_STATUSES constant
     it "has a list of supported statuses" do
-        expect(Systemd::Service::LIST_OF_STATUSES).to eq %w( enabled active )
+        expect(Systemdy::Service::LIST_OF_STATUSES).to eq %w( enabled active )
     end
 
     # test LIST_OF_STATUS_PROPERTIES constant 
     it "has a list of status properties" do
-        expect(Systemd::Service::LIST_OF_STATUS_PROPERTIES).to eq %w( Id Description ExecMainPID LoadState 
+        expect(Systemdy::Service::LIST_OF_STATUS_PROPERTIES).to eq %w( Id Description ExecMainPID LoadState 
             ActiveState FragmentPath ActiveEnterTimestamp InactiveEnterTimestamp ActiveExitTimestamp InactiveExitTimestamp
         )
     end 
@@ -51,7 +51,7 @@ describe Systemd::Service do
     end
 
     # dynamically test methods based on LIST_OF_ACTIONS constant
-    Systemd::Service::LIST_OF_ACTIONS.each do |action|
+    Systemdy::Service::LIST_OF_ACTIONS.each do |action|
         describe "##{action}" do
             it "#{action} the created service" do
                 # test object's action method 
@@ -81,13 +81,13 @@ describe Systemd::Service do
             expect(real_service).to respond_to("status")
             # test that returned value from object's status method is an hash
             expect(real_service.status).to be_an_instance_of(Hash)
-            # test that returned value is an hash with a number of elements equal to Systemd::Service::LIST_OF_STATUS_PROPERTIES elements 
-            expect(real_service.status.size).to eq Systemd::Service::LIST_OF_STATUS_PROPERTIES.size
+            # test that returned value is an hash with a number of elements equal to Systemdy::Service::LIST_OF_STATUS_PROPERTIES elements 
+            expect(real_service.status.size).to eq Systemdy::Service::LIST_OF_STATUS_PROPERTIES.size
         end
     end
 
     # dynamically test methods based on LIST_OF_STATUSES constant
-    Systemd::Service::LIST_OF_STATUSES.each do |status|
+    Systemdy::Service::LIST_OF_STATUSES.each do |status|
         describe "#is_#{status}?" do
             it "check if the created service is #{status}" do
                 # test object's status method 
@@ -107,7 +107,7 @@ describe Systemd::Service do
             # test the status method
             expect(dummy_service.status).to eq default_error_message
             # test the action method
-            Systemd::Service::LIST_OF_ACTIONS.each do |action|
+            Systemdy::Service::LIST_OF_ACTIONS.each do |action|
                 expect(dummy_service.send(action)).to eq default_error_message
             end
         end

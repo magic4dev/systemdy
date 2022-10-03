@@ -1,4 +1,4 @@
-module Systemd
+module Systemdy
     class Journal 
 
         # extend SingleForwardableForwardable standard's library module for delegate a specified method to a designated object
@@ -26,20 +26,20 @@ module Systemd
         # journalctl: option requires an argument -- 'u' 
         LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT  = { unit: '-u', group_id: '_GID', user_id: '_UID' }
 
-        # we delegate return_an_array_from_system_command method to Systemd::Utility::Formatter class contained in systemd/utility/formatter.rb
-        def_delegator Systemd::Utility::Formatter,        :return_an_array_from_system_command
-        # we delegate render_message method to Systemd::Utility::MessageDisplayer class contained in systemd/utility/message_displayer.rb
-        def_delegator Systemd::Utility::MessageDisplayer, :render_message 
+        # we delegate return_an_array_from_system_command method to Systemdy::Utility::Formatter class contained in Systemdy/utility/formatter.rb
+        def_delegator Systemdy::Utility::Formatter,        :return_an_array_from_system_command
+        # we delegate render_message method to Systemdy::Utility::MessageDisplayer class contained in Systemdy/utility/message_displayer.rb
+        def_delegator Systemdy::Utility::MessageDisplayer, :render_message 
 
         # create dynamically class methods based on LIST_OF_OPTIONS_THAT_NOT_ACCEPT_ARGUMENTS constant
         # we can call the methods:
-        # Systemd::Journal.display_kernel_logs
+        # Systemdy::Journal.display_kernel_logs
         # this method accept 3 keyword arguments:
         # 1. since ('the log's initial period')  - String  - default 'yesterday' 
         # 2. to    ('the log's end period')      - String  - default Time.now.strftime('%H:%M')
         # 3. lines ('the log's number of lines') - Integer - default 10 .display_kernel_logs
         # Example:
-        # Systemd::Journal.display_kernel_logs(since: '1 month ago', lines: 50)
+        # Systemdy::Journal.display_kernel_logs(since: '1 month ago', lines: 50)
         # if you call this method without arguments
         # - it return an array with 10 lines of logs
         LIST_OF_OPTIONS_THAT_NOT_ACCEPT_ARGUMENTS.each do |message_from, option|
@@ -47,20 +47,20 @@ module Systemd
                 # logs from system call
                 logs = `#{JOURNALCTL_COMMAND} #{option} -S '#{since}' -U '#{to}' -n #{lines} | tail -n #{lines} 2>&1`
                 # logs from system call converted into array
-                return_an_array_from_system_command(logs) # class method contained in systemd/utility/formatter.rb
+                return_an_array_from_system_command(logs) # class method contained in Systemdy/utility/formatter.rb
             end
         end
         
         # create dynamically class methods based on LIST_OF_OPTIONS_THAT_ACCEPT_AN_ARGUMENT constant
         # we can call the methods:
-        # Systemd::Journal.display_boot_logs
+        # Systemdy::Journal.display_boot_logs
         # this method accept 4 keyword arguments:
         # 1. argument ('the boot's number')      - Integer - optional
         # 2. since ('the log's initial period')  - String  - default 'yesterday' 
         # 3. to    ('the log's end period')      - String  - default Time.now.strftime('%H:%M')
         # 4. lines ('the log's number of lines') - Integer - default 10 
         # Example:
-        # Systemd::Journal.display_boot_logs(argument: 3, since: '1 month ago', lines: 50)
+        # Systemdy::Journal.display_boot_logs(argument: 3, since: '1 month ago', lines: 50)
         # if you call this method without arguments
         # - it return an array with 10 lines of logs
         LIST_OF_OPTIONS_THAT_ACCEPT_AN_ARGUMENT.each do |message_from, option|
@@ -68,28 +68,28 @@ module Systemd
                 # logs from system call
                 logs = `#{JOURNALCTL_COMMAND} #{option} #{argument} -S '#{since}' -U '#{to}' -n #{lines} | tail -n #{lines} 2>&1`
                 # logs from system call converted into array
-                return_an_array_from_system_command(logs) # class method contained in systemd/utility/formatter.rb
+                return_an_array_from_system_command(logs) # class method contained in Systemdy/utility/formatter.rb
             end
         end
         
         # create dynamically class methods based on LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT constant
         # we can call the methods:
-        # Systemd::Journal.display_unit_logs
-        # Systemd::Journal.display_group_id_logs
-        # Systemd::Journal.display_user_id_logs
+        # Systemdy::Journal.display_unit_logs
+        # Systemdy::Journal.display_group_id_logs
+        # Systemdy::Journal.display_user_id_logs
         # this method accept 4 keyword arguments:
         # 1. argument ('the unit, the group_id or user_id) - String  - required
         # 2. since ('the log's initial period')  - String  - default 'yesterday' 
         # 3. to    ('the log's end period')      - String  - default Time.now.strftime('%H:%M')
         # 4. lines ('the log's number of lines') - Integer - default 10 
         # Example:
-        # Systemd::Journal.display_unit_logs(argument: 'postgresql', since: '1 month ago', lines: 50)
-        # Systemd::Journal.display_user_id_logs(argument: 1000, since: '1 month ago', lines: 50)
-        # Systemd::Journal.display_group_id_logs(argument: 1000, since: '1 month ago', lines: 50)
+        # Systemdy::Journal.display_unit_logs(argument: 'postgresql', since: '1 month ago', lines: 50)
+        # Systemdy::Journal.display_user_id_logs(argument: 1000, since: '1 month ago', lines: 50)
+        # Systemdy::Journal.display_group_id_logs(argument: 1000, since: '1 month ago', lines: 50)
         LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT.each do |message_from, option|
             define_singleton_method "display_#{message_from}_logs" do |argument: '', since: 'today', to: Time.now.strftime('%H:%M'), lines: 10|
                 # return an error message if the required argument is not provided
-                # render_message class method contained in systemd/utility/message_displayer.rb
+                # render_message class method contained in Systemdy/utility/message_displayer.rb
                 return render_message("display_#{message_from}_logs require an argument!") if argument.to_s.empty?
                 # combination of option and argument based on typology
                 # '-u postgresql' or '_GUID=1000' or '_UID=1000'
@@ -97,7 +97,7 @@ module Systemd
                 # logs from system call
                 logs                 = `#{JOURNALCTL_COMMAND} #{option_with_argument} -S '#{since}' -U '#{to}' | tail -n #{lines} 2>&1`
                 # logs from system call converted into array
-                return_an_array_from_system_command(logs) # class method contained in systemd/utility/formatter.rb
+                return_an_array_from_system_command(logs) # class method contained in Systemdy/utility/formatter.rb
             end
         end
 

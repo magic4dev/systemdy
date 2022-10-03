@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    systemd (0.1.0)
+    systemdy (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -28,7 +28,7 @@ PLATFORMS
 DEPENDENCIES
   rake (~> 13.0)
   rspec (~> 3.0)
-  systemd!
+  systemdy!
 
 BUNDLED WITH
    2.3.7

@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-require_relative "lib/systemd/version"
+require_relative "lib/systemdy/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "systemd"
-  spec.version = Systemd::VERSION
+  spec.name = "systemdy"
+  spec.version = Systemdy::VERSION
   spec.authors = "magic4dev"
   spec.email = "magic4dev@gmail.com"
 
   spec.summary = "A lightweight gem for interact with systemd"
-  spec.description = "If your goal is to develop software to quickly manage systemd services or journalctl logs, this gem is for you!"
   spec.homepage = "https://github.com/magic4dev/systemd"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"

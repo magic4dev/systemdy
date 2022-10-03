@@ -1,4 +1,4 @@
-module Systemd
+module Systemdy
     module Utility 
         class MessageDisplayer
             # method for render custom message tho the user

@@ -1,4 +1,4 @@
-module Systemd
+module Systemdy
     module Utility 
         class Formatter
             # method for convert `` system call to array based list

@@ -1,4 +1,4 @@
-module Systemd
+module Systemdy
     class Service 
 
         # extend Forwardable standard's library module for delegate a specified method to a designated object
@@ -19,22 +19,22 @@ module Systemd
         attr_reader :command, :name
 
         # we create a new object that accept 1 argument:
-        # 1. the name of the systemd service to control (postgresql, redis etc..)
+        # 1. the name of the Systemdy service to control (postgresql, redis etc..)
         # Example:
-        # my_postgresql_service = Systemd::Service.new('postgresql')
+        # my_postgresql_service = Systemdy::Service.new('postgresql')
         def initialize(name)
-            @command   = SYSTEMCTL_COMMAND # constant contained in systemd.rb
+            @command   = SYSTEMCTL_COMMAND # constant contained in Systemdy.rb
             @name      = name 
         end
 
-        # we delegate return_an_array_from_system_command method to Systemd::Utility::Formatter class contained in systemd/utility/formatter.rb
-        def_delegator Systemd::Utility::Formatter,        :return_an_array_from_system_command
-        # we delegate render_message method to Systemd::Utility::MessageDisplayer class contained in systemd/utility/message_displayer.rb
-        def_delegator Systemd::Utility::MessageDisplayer, :render_message 
-        # we delegate check_if_a_service_exist method to Systemd::Utility::Validator class contained in systemd/utility/validator.rb
-        def_delegator Systemd::Utility::Validator,        :check_if_a_service_exist 
-        # we delegate filter_by_keys method to Systemd::Utility::KeyValueFilter class contained in systemd/utility/key_value.rb
-        def_delegator Systemd::Utility::KeyValueFilter,   :filter_by_keys 
+        # we delegate return_an_array_from_system_command method to Systemdy::Utility::Formatter class contained in Systemdy/utility/formatter.rb
+        def_delegator Systemdy::Utility::Formatter,        :return_an_array_from_system_command
+        # we delegate render_message method to Systemdy::Utility::MessageDisplayer class contained in Systemdy/utility/message_displayer.rb
+        def_delegator Systemdy::Utility::MessageDisplayer, :render_message 
+        # we delegate check_if_a_service_exist method to Systemdy::Utility::Validator class contained in Systemdy/utility/validator.rb
+        def_delegator Systemdy::Utility::Validator,        :check_if_a_service_exist 
+        # we delegate filter_by_keys method to Systemdy::Utility::KeyValueFilter class contained in Systemdy/utility/key_value.rb
+        def_delegator Systemdy::Utility::KeyValueFilter,   :filter_by_keys 
 
         # method for check if a created service exist
         # Example:
@@ -44,7 +44,7 @@ module Systemd
         # otherwise return
         # - false
         def exist? 
-            check_if_a_service_exist(name) # class method contained in systemd/utility/validator.rb
+            check_if_a_service_exist(name) # class method contained in Systemdy/utility/validator.rb
         end
         
         # create dynamically methods based on LIST_OF_ACTIONS constant
@@ -87,7 +87,7 @@ module Systemd
         #   "ExecMainPID"=>"48615",
         #   "LoadState"=>"loaded",
         #   "ActiveState"=>"active",
-        #   "FragmentPath"=>"/lib/systemd/system/postgresql.service",
+        #   "FragmentPath"=>"/lib/Systemdy/system/postgresql.service",
         #   "ActiveEnterTimestamp"=>"Thu 2022-09-29 17:13:07 CEST",
         #   "InactiveEnterTimestamp"=>"Thu 2022-09-29 17:12:44 CEST",
         #   "ActiveExitTimestamp"=>"Thu 2022-09-29 17:12:44 CEST",
@@ -113,7 +113,7 @@ module Systemd
 
         # method for display error when a service or unit not exist
         def default_error_message
-            render_message("Unit #{name}.service could not be found.") # class method contained in systemd/utility/message_displayer.rb
+            render_message("Unit #{name}.service could not be found.") # class method contained in Systemdy/utility/message_displayer.rb
         end
 
         # make the methods below as private

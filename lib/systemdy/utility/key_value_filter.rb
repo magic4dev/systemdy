@@ -1,4 +1,4 @@
-module Systemd
+module Systemdy
     module Utility 
         class KeyValueFilter
             # method for filter an hash with a list of provided keys

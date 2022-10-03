@@ -1,4 +1,4 @@
-describe Systemd::Utility::KeyValueFilter do
+describe Systemdy::Utility::KeyValueFilter do
 
     # test method for filter an hash with a list of provided key
     describe ".filter_by_keys" do

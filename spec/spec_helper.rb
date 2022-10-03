@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "systemd"
+require "systemdy"
 require "setup/test_variables"
 
 RSpec.configure do |config|
