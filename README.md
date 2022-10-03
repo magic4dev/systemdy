@@ -1,11 +1,14 @@
 # Systemd
 
-![](https://img.shields.io/badge/maintainability-A-brightgreen?style=flat-square)
+<div align="center">
+
 ![GitHub repo size](https://img.shields.io/github/repo-size/magic4dev/systemd?label=size&style=flat-square)
 [![GitHub issues](https://img.shields.io/github/issues/magic4dev/systemd?style=flat-square)](https://github.com/magic4dev/systemd/issues)
 [![GitHub forks](https://img.shields.io/github/forks/magic4dev/systemd?style=flat-square)](https://github.com/magic4dev/systemd/network)
 [![GitHub license](https://img.shields.io/github/license/magic4dev/systemd?style=flat-square)](https://github.com/magic4dev/systemd/blob/master/LICENSE.txt)
 [![GitHub stars](https://img.shields.io/github/stars/magic4dev/systemd?style=flat-square)](https://github.com/magic4dev/systemd/stargazers)
+
+</div>
 
 A lightweight gem for interact with systemd.
 
