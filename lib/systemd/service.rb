@@ -11,8 +11,9 @@ module Systemd
         LIST_OF_STATUSES          = %w( enabled active )
 
         # list of status properties on a provided service when status command is called
-        LIST_OF_STATUS_PROPERTIES = %w( Names Description ExecMainPID LoadState ActiveState FragmentPath 
-                                        ActiveEnterTimestamp InactiveEnterTimestamp ActiveExitTimestamp InactiveExitTimestamp 
+        LIST_OF_STATUS_PROPERTIES = %w( Id Description ExecMainPID LoadState ActiveState FragmentPath 
+                                        ActiveEnterTimestamp InactiveEnterTimestamp ActiveExitTimestamp 
+                                        InactiveExitTimestamp 
                                     )
 
         attr_reader :command, :name
@@ -54,9 +55,12 @@ module Systemd
         # my_postgresql_service.enable
         # my_postgresql_service.disable
         # my_postgresql_service.reload
+        # my_postgresql_service.mask
+        # my_postgresql_service.unmask
         LIST_OF_ACTIONS.each do |action|
             define_method action do 
-                exist? ? `sudo #{command} #{action} #{name}` : default_error_message()
+                sudo_command = Etc.getpwuid(Process.uid).name != 'root' ? 'sudo' : ''
+                exist? ? `#{sudo_command} #{command} #{action} #{name}` : default_error_message()
             end
         end
 
@@ -78,7 +82,7 @@ module Systemd
         # Example:
         # my_postgresql_service.status
         # return a key/value pair of the provided service's status
-        # { "Names"=>"postgresql.service",              
+        # { "Id"=>"postgresql.service",              
         #   "Description"=>"PostgreSQL RDBMS",          
         #   "ExecMainPID"=>"48615",
         #   "LoadState"=>"loaded",

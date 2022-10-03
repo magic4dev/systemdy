@@ -18,7 +18,7 @@ describe Systemd::Service do
 
     # test LIST_OF_STATUS_PROPERTIES constant 
     it "has a list of status properties" do
-        expect(Systemd::Service::LIST_OF_STATUS_PROPERTIES).to eq %w( Names Description ExecMainPID LoadState 
+        expect(Systemd::Service::LIST_OF_STATUS_PROPERTIES).to eq %w( Id Description ExecMainPID LoadState 
             ActiveState FragmentPath ActiveEnterTimestamp InactiveEnterTimestamp ActiveExitTimestamp InactiveExitTimestamp
         )
     end 
