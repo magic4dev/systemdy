@@ -9,6 +9,7 @@ Gem::Specification.new do |spec|
   spec.email = "magic4dev@gmail.com"
 
   spec.summary = "A lightweight gem for interact with systemd"
+  spec.description = "If your goal is to develop software to quickly manage systemd services or journalctl logs, this gem is for you!"
   spec.homepage = "https://github.com/magic4dev/systemd"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
