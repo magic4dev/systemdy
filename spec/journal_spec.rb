@@ -83,8 +83,10 @@ describe Systemd::Journal do
             Systemd::Journal::LIST_OF_OPTIONS_THAT_REQUIRE_AN_ARGUMENT.each do |message_from, option|
                 case message_from
                 when :unit
+                    # test for unit
                     expect(described_class.send("display_#{message_from}_logs", argument: dummy_service_name)).to include("-- No entries --")
                 else !:unit
+                    # test for group_id(GID) and user_id(UID)
                     expect(described_class.send("display_#{message_from}_logs", argument: 'absbc')).to include("-- No entries --")
                 end
             end

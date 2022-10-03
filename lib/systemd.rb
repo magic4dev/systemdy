@@ -2,6 +2,7 @@
 
 # external gems or standard's library modules
 require "forwardable"
+require "etc"
 
 # systemd's class and modules
 require_relative "systemd/version"
