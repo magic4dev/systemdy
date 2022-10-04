@@ -4,9 +4,8 @@
 
 ![Gem](https://img.shields.io/gem/v/systemdy?style=flat-square)
 ![Gem](https://img.shields.io/gem/dt/systemdy?style=flat-square)
-![GitHub repo size](https://img.shields.io/github/repo-size/magic4dev/systemdy?label=size&style=flat-square)
-[![GitHub issues](https://img.shields.io/github/issues/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/issues)
 [![GitHub forks](https://img.shields.io/github/forks/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/network)
+[![GitHub issues](https://img.shields.io/github/issues/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/issues)
 [![GitHub license](https://img.shields.io/github/license/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/blob/master/LICENSE.txt)
 [![GitHub stars](https://img.shields.io/github/stars/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/stargazers)
 
