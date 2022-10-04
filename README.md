@@ -1,7 +1,9 @@
-# Systemd
+<img src="https://github.com/magic4dev/systemdy/blob/master/systemdy.png" width="100%" alt="Systemdy Logo">
 
 <div align="center">
 
+![Gem](https://img.shields.io/gem/v/systemdy?style=flat-square)
+![Gem](https://img.shields.io/gem/dt/systemdy?style=flat-square)
 ![GitHub repo size](https://img.shields.io/github/repo-size/magic4dev/systemdy?label=size&style=flat-square)
 [![GitHub issues](https://img.shields.io/github/issues/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/issues)
 [![GitHub forks](https://img.shields.io/github/forks/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/network)
@@ -10,7 +12,9 @@
 
 </div>
 
-A lightweight gem for interact with systemd.
+# Systemdy
+
+A lightweight gem for interact with Systemd.
 
 If your goal is to develop software to quickly manage systemd services or journalctl logs, this gem is for you! :grin:
 
@@ -19,7 +23,7 @@ If your goal is to develop software to quickly manage systemd services or journa
 
 - Lightweight
 - Expressive classes and methods
-- Manage systemd's services lifecycle with minimal effort!
+- Manage Systemd's services lifecycle with minimal effort!
 - Extract and manipulate Journalctl logs with a single action!
 
 ## Table of contents
@@ -72,7 +76,7 @@ Or install it yourself as:
     $ gem install systemdy
 ## Dependencies
 
-The only dependecy you need is [systemd](http://www.freedesktop.org/wiki/Software/systemdy/) installed on your system (specifically libsystemd or the older libsystemdy-journal) in order to use the gem. Currently the gem support systemd 249 or higher.
+The only dependecy you need is [systemd](http://www.freedesktop.org/wiki/Software/systemdy/) installed on your system (specifically libsystemd or the older libsystemd-journal) in order to use the gem. Currently the gem support systemd 249 or higher.
 ## Usage
 
 After installing the gem, the first step is to require it:
@@ -84,11 +88,11 @@ require 'systemdy'
 
 The first goal of this gem is to manage a systemd's service with minimal effort.
 
-This section provides an overview of the Systemdy::Service class for managing the life cycle of a systemdy's service.
+This section provides an overview of the Systemdy::Service class for managing the life cycle of a systemd's service.
 
 ### Create a Systemdy Service object for control a service
 
-The first step is to create a new instance of the systemdy::Service class for control the desired service
+The first step is to create a new instance of the Systemdy::Service class for control the desired service
 
 ```ruby
 my_postgresql_service = Systemdy::Service.new('postgresql')
@@ -260,6 +264,8 @@ This line anable you to run ‘systemctl’ commands without a password.
 
 Save with CTRL + X
 
+Type 'exit' on your terminal as follows:
+
 ```console
 root@my-machine:~# exit
 ```
@@ -388,7 +394,7 @@ Obviously this method require the unit's name as argument, if executed with no a
 "display_unit_logs require an argument!"
 ```
 
-Obviously as for the previous method, you can filter the unit logs by passing **4** positional arguments:
+As for the previous method, you can filter the unit logs by passing **4** positional arguments:
 
 * **argument**: in this case the unit's name
 
@@ -443,7 +449,7 @@ Obviously this method require the GUID as argument, if executed with no argument
 "display_group_id_logs require an argument!"
 ```
 
-Obviously as for the previous method, you can filter the GUID logs by passing **4** positional arguments:
+As for the previous method, you can filter the GUID logs by passing **4** positional arguments:
 
 * **argument**: in this case the GUID
 
@@ -498,7 +504,7 @@ Obviously this method require the UID as argument, if executed with no arguments
 "display_user_id_logs require an argument!"
 ```
 
-Obviously as for the previous method, you can filter the UID logs by passing **4** positional arguments:
+As for the previous method, you can filter the UID logs by passing **4** positional arguments:
 
 * **argument**: in this case the UID
 
@@ -537,7 +543,7 @@ If the passed arguments not match anything the method return an array with a mes
 
 We :heart: pull requests from everyone. 
 
-Everyone interacting in the systemdy project's codebases is expected to follow the [code of conduct](https://github.com/magic4dev/systemdy/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the systemdy's project codebase is expected to follow the [code of conduct](https://github.com/magic4dev/systemdy/blob/master/CODE_OF_CONDUCT.md).
 
 ### Develop a new feature
 
@@ -566,9 +572,8 @@ If you wanna develop a new feature:
 * Write a good commit message
 * Push to your fork
 * [Submit a pull request](https://github.com/magic4dev/systemdy/compare)
-* Wait for us, we will reply as soon as possible
-* We may suggest changes for better code quality
-* Please, if you push more than mone commit let's keep the history clean :stuck_out_tongue_winking_eye:
+* Wait for us, we will reply as soon as possible and if is the case we suggest some changes for a better quality of the code
+* Please, if you push more than one commit let's keep the history clean :stuck_out_tongue_winking_eye:
 
 Thank you for your contribution! :handshake:
 
@@ -599,9 +604,8 @@ If you wanna fix a bug:
 * Write a good commit message
 * Push to your fork
 * [Submit a pull request](https://github.com/magic4dev/systemdy/compare)
-* Wait for us, we will reply as soon as possible
-* We may suggest changes for better code quality
-* Please, if you push more than mone commit let's keep the history clean :stuck_out_tongue_winking_eye:
+* Wait for us, we will reply as soon as possible and if is the case we suggest some changes for a better quality of the code
+* Please, if you push more than one commit let's keep the history clean :stuck_out_tongue_winking_eye:
 
 Thank you for your contribution! :handshake:
 
@@ -619,9 +623,9 @@ and replace:
 
 * let (:real_service_name) { 'postgresql' }
 
-with:
+with a service already installed on your system as follows:
 
-* let (:real_service_name) { 'a_installed_service_on_your_system' }
+* let (:real_service_name) { 'a_service_already_installed_on_your_system' }
 
 ## License
 
@@ -630,7 +634,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Useful links and resources
 
  - An interesting article on [how to run sudo commands without password](https://www.linuxshelltips.com/run-sudo-commands-without-password/)
- - The official systemdy documentation for [time specification](https://www.freedesktop.org/software/systemd/man/systemd.time.html)
+ - The official Systemd documentation for [time specification](https://www.freedesktop.org/software/systemd/man/systemd.time.html)
  
 ## Acknowledgements
 
