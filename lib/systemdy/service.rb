@@ -59,8 +59,8 @@ module Systemdy
         # my_postgresql_service.unmask
         LIST_OF_ACTIONS.each do |action|
             define_method action do 
-                sudo_command = Etc.getpwuid(Process.uid).name != 'root' ? 'sudo' : ''
-                exist? ? `#{sudo_command} #{command} #{action} #{name}` : default_error_message()
+                sudo = Etc.getpwuid(Process.uid).name != 'root' ? 'sudo' : ''
+                exist? ? `#{sudo} #{command} #{action} #{name}` : default_error_message()
             end
         end
 
