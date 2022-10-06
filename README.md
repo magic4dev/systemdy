@@ -1,4 +1,4 @@
-<img src="https://github.com/magic4dev/systemdy/blob/master/systemdy.png" width="100%" alt="Systemdy Logo">
+<img src="https://raw.githubusercontent.com/magic4dev/systemdy/master/systemdy.png" width="100%" alt="Systemdy Logo">
 
 <div align="center">
 
