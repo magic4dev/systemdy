@@ -1,7 +1,7 @@
 module Systemdy
     # A module that contains a set of useful classes for add utilities to the Systemdy's core
     module Utility 
-        # Allows to add validatation to a class
+        # Allows to add validation to a class
         class Validator
             # a method for check if a service is intalled on the system
             #
