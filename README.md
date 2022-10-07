@@ -1,6 +1,4 @@
-<img src="https://raw.githubusercontent.com/magic4dev/systemdy/master/systemdy.png" width="100%" alt="Systemdy Logo">
-
-<div align="center">
+<img src="https://raw.githubusercontent.com/magic4dev/systemdy/master/systemdy.png" width="1012px" alt="Systemdy Logo">
 
 ![Gem](https://img.shields.io/gem/v/systemdy?style=flat-square)
 ![Gem](https://img.shields.io/gem/dt/systemdy?style=flat-square)
@@ -8,8 +6,6 @@
 [![GitHub issues](https://img.shields.io/github/issues/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/issues)
 [![GitHub license](https://img.shields.io/github/license/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/blob/master/LICENSE.txt)
 [![GitHub stars](https://img.shields.io/github/stars/magic4dev/systemdy?style=flat-square)](https://github.com/magic4dev/systemdy/stargazers)
-
-</div>
 
 # Systemdy
 
@@ -58,6 +54,7 @@ If your goal is to develop software to quickly manage systemd services or journa
 * [License](#license)
 * [Useful links and resources](#useful-links-and-resources)
 * [Acknowledgements](#acknowledgements) 
+
 ## Installation
 
 Add this line to your application's Gemfile:
