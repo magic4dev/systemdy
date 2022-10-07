@@ -13,11 +13,13 @@ require_relative "systemdy/utility/key_value_filter"
 require_relative "systemdy/service"
 require_relative "systemdy/journal"
 
+# Allow to control systemd's services and manage journalctl logs
 module Systemdy
+  # Allows to manange errors
   class Error < StandardError; end
 
-  # systemctl command
+  # systemctl default command
   SYSTEMCTL_COMMAND  = 'systemctl'
-  # journalctl command
+  # journalctl default command
   JOURNALCTL_COMMAND = 'journalctl'
 end
