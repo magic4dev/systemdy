@@ -173,10 +173,21 @@ module Systemdy
         # @return [String] the error message
         # @example the action start on a service not installed on the system
         #     a_service_not_installed.start #=> "Unit a_service_not_installed.service could not be found."
-        # @!visibility private
         def default_error_message
             render_message("Unit #{name}.service could not be found.") # class method contained in Systemdy/utility/message_displayer.rb
         end
+
+        # @!method return_an_array_from_system_command
+        #   @param system_call [String] system call to convert to an array
+        #   @return [Array] an array-based list of the values ​​returned by making a system call
+        #   @note check out more about this method in Systemdy/utility/formatter.rb
+        #
+        # @!method filter_by_keys
+        #   @param hash [Hash] the hash to filter
+        #   @param list_of_keys [Array] the list of keys to extract from the hash
+        #   @return [Hash] a new hash that contains only the required keys
+        #   @note check out more about this method in Systemdy/utility/key_value_filter.rb
+        #
 
         # make the methods below as private
         private :render_message, :default_error_message, :return_an_array_from_system_command, :filter_by_keys 
