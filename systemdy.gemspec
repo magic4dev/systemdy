@@ -9,12 +9,13 @@ Gem::Specification.new do |spec|
   spec.email = "magic4dev@gmail.com"
 
   spec.summary = "A lightweight gem for interact with systemd"
-  spec.homepage = "https://github.com/magic4dev/systemd"
+  spec.homepage = "https://github.com/magic4dev/systemdy"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
+  spec.metadata["documentation_uri"] = "https://www.rubydoc.info/github/magic4dev/systemdy/master"
   spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/master/CHANGELOG.md"
   spec.metadata["code_of_conduct_uri"] = "#{spec.homepage}/blob/master/CODE_OF_CONDUCT.md"
 
