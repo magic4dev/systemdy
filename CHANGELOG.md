@@ -1,3 +1,13 @@
+## [0.3.0] - 2022-10-21 
+
+### Added
+
+- Method remove_newline_from_system_command to Systemdy::Utility::Formatter class for remove \n characters from system calls
+
+### Changed
+
+- Logic for class Systemdy::Service is_active? and is_enabled? instance methods
+
 ## [0.2.1] - 2022-10-11 
 
 ### Fixed
