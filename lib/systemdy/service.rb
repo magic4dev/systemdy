@@ -34,6 +34,8 @@ module Systemdy
 
         # delegate return_an_array_from_system_command method to Systemdy::Utility::Formatter class contained in Systemdy/utility/formatter.rb
         def_delegator Systemdy::Utility::Formatter,        :return_an_array_from_system_command
+        # delegate remove_newline_from_system_command to Systemdy::Utility::Formatter class contained in Systemdy/utility/formatter.rb
+        def_delegator Systemdy::Utility::Formatter,        :remove_newline_from_system_command
         # delegate render_message method to Systemdy::Utility::MessageDisplayer class contained in Systemdy/utility/message_displayer.rb
         def_delegator Systemdy::Utility::MessageDisplayer, :render_message 
         # delegate check_if_a_service_exist method to Systemdy::Utility::Validator class contained in Systemdy/utility/validator.rb
@@ -101,8 +103,9 @@ module Systemdy
         #
         LIST_OF_ACTIONS.each do |action|
             define_method action do 
+                return default_error_message() unless exist?
                 sudo = Etc.getpwuid(Process.uid).name != 'root' ? 'sudo' : ''
-                exist? ? `#{sudo} #{command} #{action} #{name}` : default_error_message()
+                `#{sudo} #{command} #{action} #{name}` 
             end
         end
 
@@ -146,7 +149,8 @@ module Systemdy
         #     }
         #
         def status 
-            exist? ? filter_by_keys(properties, LIST_OF_STATUS_PROPERTIES) : default_error_message()
+            return default_error_message() unless exist?
+            filter_by_keys(properties, LIST_OF_STATUS_PROPERTIES) 
         end
 
         # create dynamically methods based on LIST_OF_STATUSES constant
@@ -165,7 +169,8 @@ module Systemdy
         # @note This method is generated with use of metaprogramming techniques
         LIST_OF_STATUSES.each do |status|
             define_method "is_#{status}?" do 
-                exist? ? return_an_array_from_system_command(`#{command} is-#{status} #{name}`).include?(status) : default_error_message()
+                return default_error_message() unless exist?
+                remove_newline_from_system_command(`#{command} is-#{status} #{name}`) == status
             end
         end
 
