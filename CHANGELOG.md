@@ -1,3 +1,16 @@
+## [0.3.2] - 2022-10-21 
+
+### Fixed
+
+- documentation_uri in gemspec
+
+## [0.3.1] - 2022-10-21 
+
+### Changed
+
+- Documentation syntax for Systemdy::Utility::Formatter.remove_newline_from_system_command class method
+- documentation_uri in gemspec
+
 ## [0.3.0] - 2022-10-21 
 
 ### Added

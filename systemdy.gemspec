@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
-  spec.metadata["documentation_uri"] = "https://www.rubydoc.info/github/magic4dev/systemdy/master"
+  spec.metadata["documentation_uri"] = "https://www.rubydoc.info/github/magic4dev/systemdy"
   spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/master/CHANGELOG.md"
   spec.metadata["code_of_conduct_uri"] = "#{spec.homepage}/blob/master/CODE_OF_CONDUCT.md"
 

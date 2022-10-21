@@ -2,5 +2,5 @@
 
 module Systemdy
   # the current version of the gem
-  VERSION = "0.3.0"
+  VERSION = "0.3.2"
 end
