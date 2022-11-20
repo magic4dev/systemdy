@@ -13,7 +13,21 @@ module Systemdy
             def self.return_an_array_from_system_command(system_call)
                 system_call_without_new_line = remove_newline_from_system_command(system_call)    # remove \n from system call returned value
                 return system_call_without_new_line if !$?.success?                               # return system error message if the process has non-zero exit status
-                system_call_without_new_line.split(/\n/)                                          # convert values returned by `` system call to an array-based list
+                return_an_array_from(system_call_without_new_line)                                # convert values returned by `` system call to an array-based list based on argument_splitter value
+            end
+
+            # method for convert a string into an array without blank elements
+            #
+            # @param  string_to_parse [String] string to convert to an array
+            # @param  argument_splitter [String] character for split string to an array 
+            # @param  remove_blank_elements [Boolean] remove blank elements or not 
+            # @return [Array] an array-based list of the values ​​returned by argument_splitter
+            # @example convert a complex string into an array 
+            #   list_of_info = Systemdy::Utility::Formatter.return_an_array_from("5432/tcp  info", argument_splitter: '/', remove_blank_elements: false) #=> ["5432", "tcp", "", "", "info"]
+            # @example convert a complex string into an array without blank elements
+            #   list_of_info_without_blank_elements = Systemdy::Utility::Formatter.return_an_array_from("5432/tcp  info", argument_splitter: '/') #=> ["5432", "tcp", "info"]
+            def self.return_an_array_from(string_to_parse, argument_splitter: '\n', remove_blank_elements: true)
+                remove_blank_elements ? string_to_parse.split(/#{argument_splitter}/).reject(&:empty?) : string_to_parse.split(/#{argument_splitter}/) 
             end
 
             # method for remove +\n+ characters from system calls
