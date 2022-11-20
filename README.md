@@ -203,7 +203,7 @@ For retrieve a service protocol
 ```ruby
 my_postgresql_service.protocol
 ```
-Once executed, this method return the provided service port:
+Once executed, this method return the provided service protocol:
 
 ```ruby
   "tcp"
