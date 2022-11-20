@@ -79,7 +79,7 @@ module Systemdy
             define_method info do 
                 return default_error_message() unless exist?
                 essential_info = return_an_array_from(`#{INFO_LOOKUP_COMMAND} #{name}`, argument_splitter: ' ')
-                return info_lookup_error_message(info) if essential_info.nil?
+                return info_lookup_error_message(info) if essential_info.nil? || essential_info.empty?
                 return_an_array_from(essential_info[1], argument_splitter: '/')[index]
             end
         end
