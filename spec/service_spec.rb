@@ -6,6 +6,16 @@ describe Systemdy::Service do
     initialized_services # TestVariables module's method contained in spec/setup/test_variables.rb
     services_attributes # TestVariables module's method contained in spec/setup/test_variables.rb
 
+    # test INFO_LOOKUP_COMMAND constant 
+    it "has a look up information command" do
+        expect(Systemdy::Service::INFO_LOOKUP_COMMAND).to eq 'getent services'
+    end
+
+    # test LIST_OF_ESSENTIAL_INFO_LOOKUP constant 
+    it "has a list of essential information" do
+        expect(Systemdy::Service::LIST_OF_ESSENTIAL_INFO_LOOKUP).to eq %w( port protocol )
+    end
+
     # test LIST_OF_ACTIONS constant
     it "has a list of supported actions" do
         expect(Systemdy::Service::LIST_OF_ACTIONS).to eq %w( start restart stop enable disable reload mask unmask )
@@ -47,6 +57,18 @@ describe Systemdy::Service do
         it "check if provided service exist" do
             # test exist? method
             expect(real_service).to respond_to("exist?")
+        end
+    end
+
+    # dynamically test methods based on LIST_OF_ESSENTIAL_INFO_LOOKUP constant 
+    Systemdy::Service::LIST_OF_ESSENTIAL_INFO_LOOKUP.each_with_index do |info, index|
+        describe "##{info}" do
+            it "return the #{info} for the created service" do
+                # test object's info method 
+                expect(real_service).to respond_to("#{info}")
+                # object's info method 
+                expect(real_service.send("#{info}")).to eq real_service_essential_info_lookup[index]
+            end
         end
     end
 

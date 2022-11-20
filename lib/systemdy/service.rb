@@ -7,17 +7,23 @@ module Systemdy
         # extend Forwardable standard's library module for delegate a specified method to a designated object
         extend Forwardable
 
+        # service look up information command 
+        INFO_LOOKUP_COMMAND           = "getent services"
+
+        # list of essential information on a provided service
+        LIST_OF_ESSENTIAL_INFO_LOOKUP = %w( port protocol )
+
         # list of supported actions on a provided service
-        LIST_OF_ACTIONS           = %w( start restart stop enable disable reload mask unmask )
+        LIST_OF_ACTIONS               = %w( start restart stop enable disable reload mask unmask )
 
         # list of supported statuses on a provided service
-        LIST_OF_STATUSES          = %w( enabled active )
+        LIST_OF_STATUSES              = %w( enabled active )
 
         # list of status properties on a provided service when status command is called
-        LIST_OF_STATUS_PROPERTIES = %w( Id Description ExecMainPID LoadState ActiveState FragmentPath 
-                                        ActiveEnterTimestamp InactiveEnterTimestamp ActiveExitTimestamp 
-                                        InactiveExitTimestamp 
-                                    )
+        LIST_OF_STATUS_PROPERTIES     = %w( Id Description ExecMainPID LoadState ActiveState FragmentPath 
+                                            ActiveEnterTimestamp InactiveEnterTimestamp ActiveExitTimestamp 
+                                            InactiveExitTimestamp 
+                                        )
 
         attr_reader :command, :name
 
@@ -34,6 +40,8 @@ module Systemdy
 
         # delegate return_an_array_from_system_command method to Systemdy::Utility::Formatter class contained in Systemdy/utility/formatter.rb
         def_delegator Systemdy::Utility::Formatter,        :return_an_array_from_system_command
+        # delegate return_an_array_from method to Systemdy::Utility::Formatter class contained in Systemdy/utility/formatter.rb
+        def_delegator Systemdy::Utility::Formatter,        :return_an_array_from
         # delegate remove_newline_from_system_command to Systemdy::Utility::Formatter class contained in Systemdy/utility/formatter.rb
         def_delegator Systemdy::Utility::Formatter,        :remove_newline_from_system_command
         # delegate render_message method to Systemdy::Utility::MessageDisplayer class contained in Systemdy/utility/message_displayer.rb
@@ -50,6 +58,30 @@ module Systemdy
         #   my_postgresql_service.exist? #=> true
         def exist? 
             check_if_a_service_exist(name) # class method contained in Systemdy/utility/validator.rb
+        end
+
+        # create dynamically methods based on LIST_OF_ESSENTIAL_INFO_LOOKUP constant 
+        # @!method port
+        #   return the available +port+ of the service
+        #   @example get the service port
+        #       my_postgresql_service.port #=> "5432"
+        #   @note This method is generated with use of metaprogramming techniques
+        #   @todo This method return an error message when there are no port available
+        #
+        # @!method protocol
+        #   return the available +protocol+ of the service
+        #   @example restart a service
+        #       my_postgresql_service.protocol #=> "tcp"
+        #   @note This method is generated with use of metaprogramming techniques
+        #   @todo This method return an error message when there are no protocol available
+        #
+        LIST_OF_ESSENTIAL_INFO_LOOKUP.each_with_index do |info, index|
+            define_method info do 
+                return default_error_message() unless exist?
+                essential_info = return_an_array_from(`#{INFO_LOOKUP_COMMAND} #{name}`, argument_splitter: ' ')
+                return info_lookup_error_message(info) if essential_info.nil?
+                return_an_array_from(essential_info[1], argument_splitter: '/')[index]
+            end
         end
         
         # create dynamically methods based on LIST_OF_ACTIONS constant
@@ -182,10 +214,24 @@ module Systemdy
             render_message("Unit #{name}.service could not be found.") # class method contained in Systemdy/utility/message_displayer.rb
         end
 
+        # method to show a message when a service has no port or protocols available
+        # @return [String] the info lookup error message
+        # @example call port method on a service that has no port available
+        #     a_service_that_has_no_port_available #=> "a_service_that_has_no_port_available.service has no port available"
+        def info_lookup_error_message(info)
+            render_message("#{name}.service has no #{info} available") # class method contained in Systemdy/utility/message_displayer.rb
+        end
+
         # @!method return_an_array_from_system_command
         #   @param system_call [String] system call to convert to an array
         #   @return [Array] an array-based list of the values ​​returned by making a system call
         #   @note check out more about this method in Systemdy/utility/formatter.rb
+        #
+        # @!method return_an_array_from
+        #   @param string_to_parse [String] string to convert to an array
+        #   @param argument_splitter [String] character for split string to an array 
+        #   @param remove_blank_elements [Boolean] remove blank elements or not 
+        #   @return [Array] an array-based list of the values ​​returned by argument_splitter
         #
         # @!method filter_by_keys
         #   @param hash [Hash] the hash to filter
@@ -195,6 +241,6 @@ module Systemdy
         #
 
         # make the methods below as private
-        private :render_message, :default_error_message, :return_an_array_from_system_command, :filter_by_keys 
+        private :render_message, :default_error_message, :info_lookup_error_message, :return_an_array_from_system_command, :return_an_array_from, :filter_by_keys 
     end
 end
