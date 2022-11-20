@@ -31,7 +31,9 @@ If your goal is to develop software to quickly manage systemd services or journa
   * [Check if the provided service is enabled](#check-if-the-provided-service-is-enabled)
   * [Check if the provided service is active](#check-if-the-provided-service-is-active)
   * [Check the current status of the provided service](#check-the-current-status-of-the-provided-service)
-  * [Display all the properties for the provided service](#check-the-current-status-of-the-provided-service)
+  * [Display all the properties for the provided service](#display-all-the-properties-for-the-provided-service)
+  * [Get service port](#get-service-port)
+  * [Get service protocol](#get-service-protocol)
   * [Start the service](#start-the-service)
   * [Restart the service](#restart-the-service)
   * [Stop the service](#stop-the-service)
@@ -70,9 +72,11 @@ And then execute:
 Or install it yourself as:
 
     $ gem install systemdy
+
 ## Dependencies
 
 The only dependecy you need is [systemd](http://www.freedesktop.org/wiki/Software/systemdy/) installed on your system (specifically libsystemd or the older libsystemd-journal) in order to use the gem. Currently the gem support systemd 249 or higher.
+
 ## Usage
 
 After installing the gem, the first step is to require it:
@@ -80,6 +84,7 @@ After installing the gem, the first step is to require it:
 ```ruby
 require 'systemdy'
 ```
+
 ## Manage services
 
 The first goal of this gem is to manage a systemd's service with minimal effort.
@@ -148,9 +153,11 @@ Once executed, this method return an hash with all the essential service's infor
    "InactiveExitTimestamp"=>"Thu 2022-09-29 17:13:07 CEST"
  } 
 ```
+
 ### Display all the properties for the provided service
 
 For check all the properties of the service 
+
 ```ruby
 my_postgresql_service.properties
 ```
@@ -168,6 +175,44 @@ To extract the value of a specific property
 
 ```ruby
 my_postgresql_service.properties["MemorySwapMax"]
+```
+
+### Get service port
+
+For retrieve a service port
+
+```ruby
+my_postgresql_service.port
+```
+Once executed, this method return the provided service port:
+
+```ruby
+ "5432"
+```
+
+if the provided service has no available port, this method return a message like this:
+
+```ruby
+ "postgresql.service has no port available"
+```
+
+### Get service protocol
+
+For retrieve a service protocol
+
+```ruby
+my_postgresql_service.protocol
+```
+Once executed, this method return the provided service port:
+
+```ruby
+  "tcp"
+```
+
+if the provided service has no available protocol, this method return a message like this:
+
+```ruby
+ "postgresql.service has no protocol available"
 ```
 
 ### Start the service
@@ -218,12 +263,14 @@ For mask the service
 ```ruby
 my_postgresql_service.mask
 ```
+
 ### Unmask the service
 
 For unmask the service 
 ```ruby
 my_postgresql_service.unmask
 ```
+
 ## Bonus tip: execute systemctl commands without prompt the password
 
 The methods **start**, **restart**, **stop**, **enable**, **disable**, **reload**, **mask** and **unmask** detect non-root users and automatically execute the methods with sudo.
@@ -266,6 +313,7 @@ Type 'exit' on your terminal as follows:
 root@my-machine:~# exit
 ```
 Exit from root session and you are ready to go! :sunglasses:
+
 ## Manage Journalctl logs
 
 The second goal of this gem is to provide a set of useful methods for retrieving journalctl log data.
@@ -535,6 +583,7 @@ If the passed arguments not match anything the method return an array with a mes
 ```ruby
 ["-- No entries --"]
 ```
+
 ## Contributing
 
 We :heart: pull requests from everyone. 
@@ -629,9 +678,9 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Useful links and resources
 
- - An interesting article on [how to run sudo commands without password](https://www.linuxshelltips.com/run-sudo-commands-without-password/)
- - The official Systemd documentation for [time specification](https://www.freedesktop.org/software/systemd/man/systemd.time.html)
+- An interesting article on [how to run sudo commands without password](https://www.linuxshelltips.com/run-sudo-commands-without-password/)
+- The official Systemd documentation for [time specification](https://www.freedesktop.org/software/systemd/man/systemd.time.html)
  
 ## Acknowledgements
 
- - Thanks to [@colstrom](https://github.com/colstrom) and his [systemized](https://github.com/colstrom/systemized) for the great inspiration 
+- Thanks to [@colstrom](https://github.com/colstrom) and his [systemized](https://github.com/colstrom/systemized) for the great inspiration 

@@ -1,3 +1,15 @@
+## [0.4.0] - 2022-11-22
+
+### Added
+
+- Systemdy::Utility::Formatter return_an_array_from class method for convert a complex string into array with custom splitter
+- Systemdy::Service port method for return service port if available
+- Systemdy::Service protocol method for return service protocol if available
+
+### Changed
+
+- Logic for Systemd::Utility::Formatter return_an_array_from_system_command class method 
+
 ## [0.3.2] - 2022-10-21 
 
 ### Fixed
