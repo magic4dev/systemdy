@@ -1,3 +1,9 @@
+## [0.4.1] - 2022-11-22
+
+### Fixed
+
+- Systemdy::Utility::Formatter return_an_array_from error for empty array and nil returned object
+
 ## [0.4.0] - 2022-11-22
 
 ### Added
