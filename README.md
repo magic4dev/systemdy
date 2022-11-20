@@ -193,7 +193,7 @@ Once executed, this method return the provided service port:
 if the provided service has no available port, this method return a message like this:
 
 ```ruby
- "postgresql.service has no port available"
+ "[name_of_the_service].service has no port available"
 ```
 
 ### Get service protocol
@@ -212,7 +212,7 @@ Once executed, this method return the provided service protocol:
 if the provided service has no available protocol, this method return a message like this:
 
 ```ruby
- "postgresql.service has no protocol available"
+ "[name_of_the_service].service has no protocol available"
 ```
 
 ### Start the service
